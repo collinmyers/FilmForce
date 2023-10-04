@@ -26,9 +26,6 @@ input[type="date"]{
     border-radius: 4px;
 }
 
-input[type="date"]{
-    padding: 10px 42px;
-}
 
 input[type="submit"] {
     background-color: #E50914;
