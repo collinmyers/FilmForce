@@ -11,90 +11,107 @@ body {
     color: white;
 }
 
-/* Style the header */
-header {
-    background-color: #77040a;
+/* Style the site header */
+.site-header {
+    background-color: #77040A;
     color: black;
     text-align: center;
     padding: 20px 0;
-}
-
-header h1 {
-    font-size: 36px;
-}
-
-header p {
-    font-size: 18px;
 }
 
 #home-force {
     color: #E50914;
 }
 
-/* Style the navigation bar */
-nav ul {
+.site-header h1 {
+    font-size: 36px;
+}
+
+.site-header p {
+    font-size: 18px;
+}
+
+/* Style the main navigation */
+.main-nav ul {
     list-style: none;
     background-color: #333;
     text-align: center;
     padding: 10px 0;
 }
 
-nav ul li {
+.main-nav ul li {
     display: inline;
     margin-right: 20px;
 }
 
-nav ul li a {
+.main-nav ul li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
 }
 
-/* Main content styling */
-main {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #333;
+/* Style the page container */
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-section {
+.content-wrap {
+    flex: 1;
+}
+
+/* Style the main content */
+.content {
+    max-width: 1200px;
+    width: 40%;
+    float: left;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #222;
+    display: inline;
+}
+
+.content section {
     margin-bottom: 30px;
 }
 
-h2 {
+.content h2 {
     font-size: 24px;
     margin-bottom: 10px;
 }
 
-h3 {
+.content h3 {
     font-size: 20px;
     margin-top: 20px;
 }
 
 /* Style the sidebar */
 .sidebar {
-    float: right;
-    width: 25%;
-    background-color: #333;
+    width: 33%;
+    background-color: #222;
     color: white;
     padding: 20px;
+    margin: 20px auto;
+    display: inline;
+    float: right;
+    width: 40%;
 }
 
 .sidebar h2 {
     font-size: 24px;
 }
 
-.sidebar ul {
+.sidebar ul.review-list {
     list-style: none;
     padding: 0;
 }
 
-.sidebar ul li {
+.sidebar ul.review-list li {
     margin-bottom: 10px;
 }
 
-.sidebar ul li a {
+.sidebar ul.review-list li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
