@@ -1,5 +1,11 @@
 /* Reset some default browser styles */
-body, h1, h2, h3, p, ul, li {
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
     margin: 0;
     padding: 0;
 }
@@ -115,4 +121,29 @@ body {
     text-decoration: none;
     color: white;
     font-weight: bold;
+}
+
+input[type="password"] {
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+
+input[type="submit"],
+button {
+    background-color: #E50914;
+    color: #FFFFFF;
+    margin: 20px;
+    padding: 10px 40px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #FFFFFF;
+    color: #E50914;
+}
+
+.account-settings {
+    text-align: center;
 }
