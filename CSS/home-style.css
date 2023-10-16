@@ -13,13 +13,13 @@ li {
 /* Set background colors and font styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: black;
+    background-color: #000000;
     color: white;
 }
 
 /* Style the site header */
 .site-header {
-    background-color: #77040A;
+    background-color: #000000;
     color: #FFFFFF;
     text-align: center;
     padding: 20px 0;
@@ -40,7 +40,7 @@ body {
 /* Style the main navigation */
 .main-nav ul {
     list-style: none;
-    background-color: #333;
+    background-color: #E50914;
     text-align: center;
     padding: 10px 0;
 }
@@ -75,7 +75,9 @@ body {
     margin: 20px auto;
     padding: 20px;
     background-color: #222;
-    display: inline;
+    display: flex;
+    flex-direction: column;
+    word-wrap: calc();
 }
 
 .content section {
@@ -146,4 +148,9 @@ button:hover {
 
 .account-settings {
     text-align: center;
+}
+
+#settings-title,
+#change-pass-title {
+    margin: 10px 0;
 }
