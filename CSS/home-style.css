@@ -139,6 +139,14 @@ button:hover {
     margin: 10px 0;
 }
 
+#settings-title{
+    color: #E50914
+}
+
+#change-pass-button{
+    margin: 0;
+}
+
 .popular-movies,
 #new-reviews {
     margin-left: 30px;
@@ -152,4 +160,19 @@ button:hover {
 .movie-name {
     margin: 20px;
     text-align: center;
+}
+
+.movie-page{
+    text-align: center;
+    display: flex;
+    max-width: 80%;
+}
+
+#movie-poster{
+    max-width: 20%;
+    max-height: 20%;
+}
+
+#movie-details{
+    list-style: none;
 }
