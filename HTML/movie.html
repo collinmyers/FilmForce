@@ -7,50 +7,60 @@
     <link rel="stylesheet" href="../CSS/home-style.css">
 </head>
 <body>
-<header class="site-header">
-    <h1>Welcome to Film<span id="home-force">Force</span></h1>
-    <p>For the Love of Cinema</p>
-</header>
-
-<div  style="text-align: center;">
-    <header>
-        <h1>Shrek</h1>
+    <header class="site-header">
+        <h1>Welcome to Film<span id="home-force">Force</span></h1>
+        <p>For the Love of Cinema</p>
     </header>
-
-    <div class="container">
-        <img src="../Assets/Shrek.jpeg" alt="Movie Poster"
-             width="500"
-             height="700"
-             class="center"
-        />
-        <h2 style="color: #E50914">Movie Ratings</h2>
-        <h3 style="color: #E50914">FilmForce Rating</h3>
-        <h4 style="color: #FFF"><strong>Rating: </strong> 5.0/5.0</h4>
-        <div class="rating">
-            <input type="radio" id="star1" name="rating" value="1"><label for="star1" style="color: #FFF"></label>
-            <input type="radio" id="star2" name="rating" value="2"><label for="star2" style="color: #FFF"></label>
-            <input type="radio" id="star3" name="rating" value="3"><label for="star3" style="color: #FFF"></label>
-            <input type="radio" id="star4" name="rating" value="4"><label for="star4" style="color: #FFF"></label>
-            <input type="radio" id="star5" name="rating" value="5"><label for="star5" style="color: #FFF"></label>
-        </div>
-        <h3 style="color: #E50914">IMDB Rating</h3>
-        <h4 style="color: #FFF"><strong>Rating: </strong> 7.9/10.0</h4>
-        <h3 style="color: #E50914">Rotten Tomatoes Rating</h3>
-        <h4 style="color: #FFF"><strong>Rating: </strong> 88%</h4>
-        <h2 style="color: #E50914">Movie Overview</h2>
-        <p style="color: #FFF">A mean lord exiles fairytale creatures to the swamp of a grumpy ogre, who must go on a quest and rescue a princess for the lord in order to get his land back.</p>
-
-        <h2 style="color: #E50914">Movie Details</h2>
+    <nav class="main-nav">
         <ul>
-            <li style="color: #FFF"><strong>Release Date:</strong> April 21, 2001</li>
-            <li style="color: #FFF"><strong>Genre:</strong> Animation, Adventure, Comedy</li>
-            <li style="color: #FFF"><strong>Directors:</strong> Andrew Adamson & Vicky Jenson</li>
-            <li style="color: #FFF"><strong>Starring:</strong> Mike Myers, Eddie Murphy, Cameron Diaz</li>
-            <li style="color: #FFF"><strong>Runtime:</strong> 1h 30min</li>
+            <li><a href="../HTML/home.html">Home</a></li>
+            <li><a href="../HTML/movie.html">Movies</a></li>
+            <li><a href="#">TV Shows</a></li>
+            <li><a href="#">Reviews</a></li>
+            <li><a href="../HTML/login.html">Login/Sign Up</a></li>
+            <li><a href="#">Contact</a></li>
         </ul>
+    </nav>
 
-        <h2 style="color: #E50914">Trailer</h2>
-        <iframe width="500" height="250" src="https://www.youtube.com/embed/lNfei4YCZ5o?si=KEfd4Mt7kmvRJ0UO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+    <div class="movie-page">
+        <section class="top">
+            <h1 class="movie-title">Shrek</h1>
+            <img id="movie-poster" src="../Assets/Shrek_Poster.jpg" alt="Shrek Movie Poster"/>
+
+            <h2 style="color: #E50914">Movie Ratings</h2>
+            <h3 style="color: #E50914">FilmForce Rating</h3>
+            <h4 style="color: #FFF"><strong>Rating: </strong> 5.0/5.0</h4>
+            <div class="rating">
+                <input type="radio" id="star1" name="rating" value="1"><label for="star1" style="color: #FFF"></label>
+                <input type="radio" id="star2" name="rating" value="2"><label for="star2" style="color: #FFF"></label>
+                <input type="radio" id="star3" name="rating" value="3"><label for="star3" style="color: #FFF"></label>
+                <input type="radio" id="star4" name="rating" value="4"><label for="star4" style="color: #FFF"></label>
+                <input type="radio" id="star5" name="rating" value="5"><label for="star5" style="color: #FFF"></label>
+            </div>
+            <h3 style="color: #E50914">IMDB Rating</h3>
+            <h4 style="color: #FFF"><strong>Rating: </strong> 7.9/10.0</h4>
+            <h3 style="color: #E50914">Rotten Tomatoes Rating</h3>
+            <h4 style="color: #FFF"><strong>Rating: </strong> 88%</h4>
+        </section>
+        
+        <section class="bottom">
+            <h2 style="color: #E50914">Movie Overview</h2>
+            <p style="color: #FFF">A mean lord exiles fairytale creatures to the swamp of a grumpy ogre, who must go on a quest and rescue a princess for the lord in order to get his land back.</p>
+
+            <h2 style="color: #E50914">Movie Details</h2>
+            <ul id="movie-details">
+                <li style="color: #FFF"><strong>Release Date:</strong> April 21, 2001</li>
+                <li style="color: #FFF"><strong>Genre:</strong> Animation, Adventure, Comedy</li>
+                <li style="color: #FFF"><strong>Directors:</strong> Andrew Adamson & Vicky Jenson</li>
+                <li style="color: #FFF"><strong>Starring:</strong> Mike Myers, Eddie Murphy, Cameron Diaz</li>
+                <li style="color: #FFF"><strong>Runtime:</strong> 1h 30min</li>
+            </ul>
+
+            <h2 style="color: #E50914">Trailer</h2>
+            <iframe width="500" height="250" src="https://www.youtube.com/embed/lNfei4YCZ5o?si=KEfd4Mt7kmvRJ0UO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </section>
+
     </div>
 </div>
 </body>

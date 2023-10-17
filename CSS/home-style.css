@@ -1,5 +1,11 @@
 /* Reset some default browser styles */
-body, h1, h2, h3, p, ul, li {
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
     margin: 0;
     padding: 0;
 }
@@ -7,13 +13,13 @@ body, h1, h2, h3, p, ul, li {
 /* Set background colors and font styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: black;
+    background-color: #000000;
     color: white;
 }
 
 /* Style the site header */
 .site-header {
-    background-color: #77040A;
+    background-color: #000000;
     color: #FFFFFF;
     text-align: center;
     padding: 20px 0;
@@ -34,7 +40,7 @@ body {
 /* Style the main navigation */
 .main-nav ul {
     list-style: none;
-    background-color: #333;
+    background-color: #E50914;
     text-align: center;
     padding: 10px 0;
 }
@@ -63,13 +69,11 @@ body {
 
 /* Style the main content */
 .content {
-    max-width: 1200px;
-    width: 40%;
-    float: left;
+    max-width: 100%;
+    justify-content: space-between;
     margin: 20px auto;
     padding: 20px;
-    background-color: #222;
-    display: inline;
+    display: flex;
 }
 
 .content section {
@@ -86,33 +90,89 @@ body {
     margin-top: 20px;
 }
 
-/* Style the sidebar */
-.sidebar {
-    width: 33%;
-    background-color: #222;
-    color: white;
-    padding: 20px;
-    margin: 20px auto;
-    display: inline;
-    float: right;
-    width: 40%;
-}
-
-.sidebar h2 {
+h2 {
     font-size: 24px;
 }
 
-.sidebar ul.review-list {
+ul.review-list {
     list-style: none;
     padding: 0;
 }
 
-.sidebar ul.review-list li {
+ul.review-list li {
     margin-bottom: 10px;
 }
 
-.sidebar ul.review-list li a {
+ul.review-list li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
+}
+
+input[type="password"] {
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+
+input[type="submit"],
+button {
+    background-color: #E50914;
+    color: #FFFFFF;
+    margin: 20px;
+    padding: 10px 40px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #FFFFFF;
+    color: #E50914;
+}
+
+.account-settings {
+    text-align: center;
+}
+
+#settings-title,
+#change-pass-title {
+    margin: 10px 0;
+}
+
+#settings-title{
+    color: #E50914
+}
+
+#change-pass-button{
+    margin: 0;
+}
+
+.popular-movies,
+#new-reviews {
+    margin-left: 30px;
+}
+
+.main-titles {
+    text-align: center;
+    color: #E50914;
+}
+
+.movie-name {
+    margin: 20px;
+    text-align: center;
+}
+
+.movie-page{
+    text-align: center;
+    display: flex;
+    max-width: 80%;
+}
+
+#movie-poster{
+    max-width: 20%;
+    max-height: 20%;
+}
+
+#movie-details{
+    list-style: none;
 }
