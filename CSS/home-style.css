@@ -25,7 +25,8 @@ body {
     padding: 20px 0;
 }
 
-#home-force {
+#home-force,
+.movie-header{
     color: #E50914;
 }
 
@@ -41,13 +42,17 @@ body {
 .main-nav ul {
     list-style: none;
     background-color: #E50914;
-    text-align: center;
     padding: 10px 0;
+    display: flex;
+    justify-content: space-evenly;
+    padding-left: 10rem;
+    padding-right: 10rem;
 }
 
 .main-nav ul li {
-    display: inline;
+    /*display: inline;*/
     margin-right: 20px;
+
 }
 
 .main-nav ul li a {
@@ -55,6 +60,7 @@ body {
     color: white;
     font-weight: bold;
 }
+
 
 /* Style the page container */
 .page-container {
@@ -150,6 +156,11 @@ button:hover {
 .popular-movies,
 #new-reviews {
     margin-left: 30px;
+    max-width: 75%;
+}
+
+#new-reviews{
+    margin-left: 0;
 }
 
 .main-titles {
@@ -166,13 +177,48 @@ button:hover {
     text-align: center;
     display: flex;
     max-width: 80%;
+    margin-top: 2rem;
 }
 
 #movie-poster{
-    max-width: 20%;
-    max-height: 20%;
+    max-width: 40%;
+    max-height: 40%;
 }
 
 #movie-details{
     list-style: none;
+}
+
+.youtube-trailer{
+    border-color: #E50914;
+    border-width: 3px;
+}
+
+.movie-home-section{
+    display: flex;
+    margin-right: 5rem;
+}
+
+.movie-title{
+    margin-top: 2rem;
+    text-align: center;
+    font-style: italic;
+}
+
+.right{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+#details{
+    margin-top: 10rem;
+}
+
+#overview, .movie-header{
+    margin-bottom: 0.5rem;
+}
+
+.rating{
+    margin-bottom: 1rem;
 }
