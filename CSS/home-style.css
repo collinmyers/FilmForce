@@ -211,14 +211,37 @@ button:hover {
     justify-content: left;
 }
 
-#details{
-    margin-top: 10rem;
+#details, #leave-review{
+    margin-top: 3rem;
 }
 
 #overview, .movie-header{
     margin-bottom: 0.5rem;
 }
-
 .rating{
-    margin-bottom: 1rem;
+    display : flex;
+    justify-content: center;
+}
+
+.rating input{
+    position : fixed;
+    left     : -100vw;
+}
+
+.rating label{
+    width      : 45px;
+    height     : 45px;
+    padding    : 48px 0 0;
+    overflow   : hidden;
+    background : url('../Assets/stars.svg') no-repeat top left;
+}
+
+.rating:not(:hover) input:indeterminate + label,
+.rating:not(:hover) input:checked ~ input + label,
+.rating input:hover ~ input + label{
+    background-position : -48px 0;
+}
+
+.rating:not(:hover) input:focus-visible + label{
+    background-position : -96px 0;
 }

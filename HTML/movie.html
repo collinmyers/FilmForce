@@ -16,8 +16,7 @@
             <li><a href="../HTML/home.html">Home</a></li>
             <li><a href="../HTML/movie.html">Movies</a></li>
             <li><a href="../HTML/login.html">Login/Sign Up</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="../HTML/s">Settings</a></li>
         </ul>
     </nav>
 
@@ -25,23 +24,15 @@
     <div class="movie-page">
         <section class="left">
             <img id="movie-poster" src="../Assets/Shrek_Poster.jpg" alt="Shrek Movie Poster"/>
-
             <h2 class="movie-header">Movie Ratings</h2>
-            <h3 class="rating" id="FF-rating">FilmForce Rating</h3>
+            <h3 id="FF-rating">FilmForce Rating</h3>
             <h4><strong>Rating: </strong> 5.0/5.0</h4>
-            <div class="rating">
-                <input type="radio" id="star1" name="rating" value="1"><label for="star1" style="color: #FFF"></label>
-                <input type="radio" id="star2" name="rating" value="2"><label for="star2" style="color: #FFF"></label>
-                <input type="radio" id="star3" name="rating" value="3"><label for="star3" style="color: #FFF"></label>
-                <input type="radio" id="star4" name="rating" value="4"><label for="star4" style="color: #FFF"></label>
-                <input type="radio" id="star5" name="rating" value="5"><label for="star5" style="color: #FFF"></label>
-            </div>
-            <h3 class="rating" id="IMDB-rating"> IMDB Rating</h3>
+            <h3 id="IMDB-rating"> IMDB Rating</h3>
             <h4><strong>Rating: </strong> 7.9/10.0</h4>
-            <h3 class="rating" id="RT-rating">Rotten Tomatoes Rating</h3>
+            <h3 id="RT-rating">Rotten Tomatoes Rating</h3>
             <h4><strong>Rating: </strong> 88%</h4>
         </section>
-        
+
         <section class="right">
             <div id="overview">
                 <h2 class="movie-header">Movie Overview</h2>
@@ -57,6 +48,24 @@
                     <li><strong>Starring:</strong> Mike Myers, Eddie Murphy, Cameron Diaz</li>
                     <li><strong>Runtime:</strong> 1h 30min</li>
                 </ul>
+            </div>
+            <div id="leave-review">
+                <h2 class="movie-header">Leave a Review and Rating</h2>
+                <div class="rating">
+                    <input id="rating1" type="radio" name="rating" value="1">
+                    <label for="rating1">1</label>
+                    <input id="rating2" type="radio" name="rating" value="2">
+                    <label for="rating2">2</label>
+                    <input id="rating3" type="radio" name="rating" value="3">
+                    <label for="rating3">3</label>
+                    <input id="rating4" type="radio" name="rating" value="4">
+                    <label for="rating4">4</label>
+                    <input id="rating5" type="radio" name="rating" value="5">
+                    <label for="rating5">5</label>
+                </div>
+                <label for="review-text">What did you think about the movie:</label>
+                <br>
+                <textarea id="review-text" rows="10" cols="50"></textarea>
             </div>
         </section>
 
