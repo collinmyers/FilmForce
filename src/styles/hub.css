@@ -1,0 +1,252 @@
+/* Reset some default browser styles */
+body,
+html,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+.setting-nav{
+    width: 100vw;
+}
+
+/* Style the site header */
+.site-header {
+    background-color: #000000;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 20px 0;
+}
+
+
+#home-force,
+.movie-header {
+    color: #E50914;
+}
+
+.site-header h1 {
+    font-size: 36px;
+}
+
+.site-header p {
+    font-size: 18px;
+}
+
+/* Style the main navigation */
+.main-nav ul {
+    list-style: none;
+    background-color: #E50914;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.main-nav ul li {
+    margin-right: 20px;
+}
+
+.main-nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.content-wrap {
+    flex: 1;
+}
+
+/* Style the main content */
+.content {
+    max-width: 100%;
+    justify-content: space-between;
+    margin: 20px auto;
+    padding: 20px;
+    display: flex;
+}
+
+.content section {
+    margin-bottom: 30px;
+}
+
+.content h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.content h3 {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+ul.review-list {
+    list-style: none;
+    padding: 0;
+}
+
+ul.review-list li {
+    margin-bottom: 10px;
+}
+
+ul.review-list li a {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+input[type="password"] {
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+
+input[type="submit"],
+button {
+    background-color: #E50914;
+    color: #FFFFFF;
+    margin: 20px;
+    padding: 10px 40px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #FFFFFF;
+    color: #E50914;
+}
+
+.account-settings {
+    text-align: center;
+}
+
+#settings-title{
+    color: #FFFFFF;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+#acct-settings-title{
+    color: #E50914;
+    margin-top: 4rem;
+    margin-bottom: 3rem;
+}
+
+
+#change-pass-title {
+    margin: 1rem 0;
+}
+
+#change-pass-button {
+    margin: 0;
+}
+
+.popular-movies,
+#new-reviews {
+    margin-left: 30px;
+    max-width: 75%;
+}
+
+#new-reviews {
+    margin-left: 0;
+}
+
+.main-titles {
+    text-align: center;
+    color: #E50914;
+}
+
+.movie-name {
+    margin: 20px;
+    text-align: center;
+}
+
+.movie-page {
+    text-align: center;
+    display: flex;
+    max-width: 80%;
+    margin-top: 2rem;
+}
+
+#movie-poster {
+    max-width: 40%;
+    max-height: 40%;
+}
+
+#movie-details {
+    list-style: none;
+}
+
+.youtube-trailer {
+    border-color: #E50914;
+    border-width: 3px;
+}
+
+.movie-home-section {
+    display: flex;
+    margin-right: 5rem;
+}
+
+.movie-title {
+    margin-top: 2rem;
+    text-align: center;
+    font-style: italic;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+#details,
+#leave-review {
+    margin-top: 3rem;
+}
+
+#overview,
+.movie-header {
+    margin-bottom: 0.5rem;
+}
+
+.rating {
+    display: flex;
+    justify-content: center;
+}
+
+.rating input {
+    position: fixed;
+    left: -100vw;
+}
+
+.rating label {
+    width: 45px;
+    height: 45px;
+    padding: 48px 0 0;
+    overflow: hidden;
+    background: url('../Assets/stars.svg') no-repeat top left;
+}
+
+.rating:not(:hover) input:indeterminate + label,
+.rating:not(:hover) input:checked ~ input + label,
+.rating input:hover ~ input + label {
+    background-position: -48px 0;
+}
+
+.rating:not(:hover) input:focus-visible + label {
+    background-position: -96px 0;
+}

@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    color: #FFFFFF;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#title-force {
+    color: #E50914;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="username"] {
+    padding: 10px 30px;
+    margin: 8px auto;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #E50914;
+    color: #FFFFFF;
+    margin-top: 10px;
+    padding: 10px 40px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #FFFFFF;
+    color: #E50914;
+}
+
+#create-account a,
+.account-options a {
+    text-decoration: none;
+    color: #E50914;
+}
