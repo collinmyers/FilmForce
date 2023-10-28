@@ -1,6 +1,34 @@
 import '../../styles/hub.css'
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useState, useEffect } from 'react';
+import { auth } from '../../../services/firebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
-const Settings = () => {
+export default function Settings() {
+    const [loggedIn, setLoggedIn] = useState(false);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setLoggedIn(true);
+            }
+        });
+    }, []);
+
+    const handleLogout = () => {
+        signOut(auth)
+            .then(() => {
+                setLoggedIn(false);
+                auth.currentUser.reload();
+                navigate("/")
+            })
+            .catch((error) => {
+                console.error('Logout Error:', error);
+            });
+    };
+
     return (
         <div>
             <header className="site-header settings-header">
@@ -10,36 +38,38 @@ const Settings = () => {
 
             <nav className="main-nav setting-nav">
                 <ul>
-                    <li><a href="../HTML/home.html">Home</a></li>
-                    <li><a href="../HTML/movie.html">Movies</a></li>
-                    <li><a href="../HTML/login.html">Login/Sign Up</a></li>
-                    <li><a href="../HTML/settings.html">Settings</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/Movie">Movies</a></li>
+                    {loggedIn && <li><a href="/Settings">Settings</a></li>}
+                    {loggedIn ? (
+                        <li> <a onClick={handleLogout} id='logout'>Logout</a></li>
+                    ) : (
+                        <li><a href="/Login">Login</a></li>
+                    )}
                 </ul>
             </nav>
 
-                <h1 className="account-settings" id="settings-title">Settings</h1>
-                <section className="account-settings" id="change-pass">
+            <h1 className="account-settings" id="settings-title">Settings</h1>
+            <section className="account-settings" id="change-pass">
                 <h2 id="acct-settings-title">Account Settings</h2>
 
-                    <h2 id="change-pass-title">Change Password</h2>
-                    <form>
-                        <input type="password" id="current-password" name="current-password" placeholder="Current Password"/><br/><br/>
+                <h2 id="change-pass-title">Change Password</h2>
+                <form>
+                    <input type="password" id="current-password" name="current-password" placeholder="Current Password" /><br /><br />
 
-                        <input type="password" id="new-password" name="new-password" placeholder="New Password"/><br/><br/>
+                    <input type="password" id="new-password" name="new-password" placeholder="New Password" /><br /><br />
 
-                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password"/><br/><br/>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" /><br /><br />
 
-                        <input id="change-pass-button" type="submit" value="Change Password"/>
-                    </form>
-                </section>
+                    <input id="change-pass-button" type="submit" value="Change Password" />
+                </form>
+            </section>
 
-                <section className="account-settings" id="delete-acct">
-                    <button>Delete Account</button>
-                    <p id="delete-details"> Deleting your account will permanently delete your profile and all associated data.</p>
-                </section>
+            <section className="account-settings" id="delete-acct">
+                <button>Delete Account</button>
+                <p id="delete-details"> Deleting your account will permanently delete your profile and all associated data.</p>
+            </section>
 
         </div>
     );
-};
-
-export default Settings;
+}

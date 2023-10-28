@@ -44,7 +44,16 @@ body {
     font-size: 18px;
 }
 
+.sh-home{
+    padding-top: 0;
+}
+
 /* Style the main navigation */
+.main-nav{
+    margin-top: 20px;
+}
+
+
 .main-nav ul {
     list-style: none;
     background-color: #E50914;
@@ -249,4 +258,8 @@ button:hover {
 
 .rating:not(:hover) input:focus-visible + label {
     background-position: -96px 0;
+}
+
+#logout:hover{
+    cursor: pointer;
 }

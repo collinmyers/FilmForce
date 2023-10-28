@@ -6,16 +6,16 @@ const PasswordResetPage = () => {
       <h2>
         Film<span id="title-force">Force</span> Password Reset
       </h2>
-      <form action="#" method="POST">
+      <div>
         <input type="email" id="email" name="email" required placeholder="Email" /><br />
         <input type="submit" value="Reset Password" />
-      </form>
+      </div>
 
       <p className="account-options">
-        <a href="./login.html">Remember your password? Login here.</a>
+        <a href="/Login">Remember your password?</a>
       </p>
       <p className="account-options">
-        <a href="./signup.html">Don&apos;t have an account? Sign up now.</a>
+        <a href="/Signup">Don&apos;t have an account?</a>
       </p>
     </div>
   );
