@@ -9,13 +9,14 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSignUp = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         try {
             await signInWithEmailAndPassword(auth, email, password).then(() => {
                 navigate('/');
             });
         } catch (error) {
+            alert("Incorrect email or password")
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage);
@@ -48,7 +49,7 @@ const LoginPage = () => {
                     placeholder="Password"
                 />
                 <br />
-                <input type="submit" value="Login" onClick={handleSignUp} />
+                <input type="submit" value="Login" onClick={handleLogin} />
             </div>
 
             <p className="account-options">

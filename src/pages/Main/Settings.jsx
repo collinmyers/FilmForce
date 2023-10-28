@@ -1,28 +1,99 @@
 import '../../styles/hub.css'
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword, deleteUser } from 'firebase/auth';
 import { useState, useEffect } from 'react';
 import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 
 export default function Settings() {
     const [loggedIn, setLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
+                console.log('User is signed in:', user);
                 setLoggedIn(true);
+            } else {
+                console.log('No user is signed in.');
+                setLoggedIn(false);
             }
+            setIsLoading(false);
+        }, (error) => {
+            console.error('Auth state change error:', error);
+            setIsLoading(false);
         });
+        return () => unsubscribe();
     }, []);
+
+    if (isLoading) {
+        return;
+    }
+
+    const handleChangePassword = async () => {
+        const user = auth.currentUser;
+
+        try {
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            await reauthenticateWithCredential(user, credential).then(() => {
+                updatePassword(user, newPassword).then(() => {
+                    alert("Password Updated")
+                    user.reload();
+                })
+            });
+        } catch (error) {
+            console.log(error)
+        }
+
+    };
+
+    const handleConfirmationMessage = () => {
+        const isConfirmed = window.confirm('Are you sure you want to delete your account?');
+
+        if (isConfirmed) {
+            handleDelete();
+        } else {
+            return;
+        }
+    }
+
+
+    const handleDelete = async () => {
+        const user = auth.currentUser;
+
+        try {
+            await deleteUser(user);
+            navigate("/")
+            await signOut(auth)
+            alert("Account Successfully Deleted");
+
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    const validateNewPassword = () => {
+        if ((newPassword !== confirmNewPassword)) {
+            alert("Password and Confirm Password Must Match");
+            setNewPassword('');
+            setConfirmNewPassword('');
+        } else if (newPassword.length < 8 || confirmNewPassword.length < 8) {
+            alert("Password Must Be at Least 8 Characters Long");
+            setNewPassword('');
+            setConfirmNewPassword('');
+        }
+    }
 
     const handleLogout = () => {
         signOut(auth)
             .then(() => {
+                navigate("/")
                 setLoggedIn(false);
                 auth.currentUser.reload();
-                navigate("/")
             })
             .catch((error) => {
                 console.error('Logout Error:', error);
@@ -50,24 +121,56 @@ export default function Settings() {
             </nav>
 
             <h1 className="account-settings" id="settings-title">Settings</h1>
+
             <section className="account-settings" id="change-pass">
                 <h2 id="acct-settings-title">Account Settings</h2>
 
+                <p className='profile-info'>{auth.currentUser.displayName}</p>
+                <p className='profile-info'>{auth.currentUser.email}</p>
+
                 <h2 id="change-pass-title">Change Password</h2>
-                <form>
-                    <input type="password" id="current-password" name="current-password" placeholder="Current Password" /><br /><br />
+                <div>
+                    <input
+                        type="password"
+                        id="current-password"
+                        name="current-password"
+                        onChange={(text) => setCurrentPassword(text.target.value)}
+                        value={currentPassword}
+                        required
+                        placeholder="Current Password"
+                    />
+                    <br /><br />
 
-                    <input type="password" id="new-password" name="new-password" placeholder="New Password" /><br /><br />
 
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" /><br /><br />
+                    <input
+                        type="password"
+                        id="new-password"
+                        name="new-password"
+                        onChange={(text) => setNewPassword(text.target.value)}
+                        value={newPassword}
+                        required
+                        placeholder="New Password"
+                    />
+                    <br /><br />
 
-                    <input id="change-pass-button" type="submit" value="Change Password" />
-                </form>
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        name="confirm-password"
+                        onChange={(text) => setConfirmNewPassword(text.target.value)}
+                        value={confirmNewPassword}
+                        onBlur={validateNewPassword}
+                        required
+                        placeholder="Confirm Password"
+                    />
+                    <br /><br />
+
+                    <input id="change-pass-button" type="submit" value="Change Password" onClick={handleChangePassword} />
+                </div>
             </section>
 
             <section className="account-settings" id="delete-acct">
-                <button>Delete Account</button>
-                <p id="delete-details"> Deleting your account will permanently delete your profile and all associated data.</p>
+                <button onClick={handleConfirmationMessage}>Delete Account</button>
             </section>
 
         </div>

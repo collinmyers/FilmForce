@@ -26,7 +26,6 @@ export default function SignupPage() {
         }
     };
 
-
     const validatePassword = () => {
         if ((password !== confirmPassword)) {
             alert("Password and Confirm Password Must Match");
@@ -61,6 +60,7 @@ export default function SignupPage() {
                     name="email"
                     onChange={(text) => setEmail(text.target.value)}
                     value={email}
+                    onBlur={validatePassword}
                     required
                     placeholder="Email"
                 />

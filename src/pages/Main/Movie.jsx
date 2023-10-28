@@ -8,16 +8,30 @@ import Poster from '../../assets/Poster.jpg'
 
 const MovieProfilePage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
+                console.log('User is signed in:', user);
                 setLoggedIn(true);
+            } else {
+                console.log('No user is signed in.');
+                setLoggedIn(false);
             }
+            setIsLoading(false);
+        }, (error) => {
+            console.error('Auth state change error:', error);
+            setIsLoading(false);
         });
+        return () => unsubscribe();
     }, []);
+
+    if (isLoading) {
+        return;
+    }
 
     const handleLogout = () => {
         signOut(auth)

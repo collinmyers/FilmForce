@@ -141,6 +141,7 @@ button:hover {
 
 .account-settings {
     text-align: center;
+    border-bottom: 1px;
 }
 
 #settings-title{
@@ -151,13 +152,14 @@ button:hover {
 
 #acct-settings-title{
     color: #E50914;
-    margin-top: 4rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
 }
 
 
 #change-pass-title {
-    margin: 1rem 0;
+    color: #E50914;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 #change-pass-button {
@@ -262,4 +264,9 @@ button:hover {
 
 #logout:hover{
     cursor: pointer;
+}
+
+.profile-info{
+    font-weight: bold;
+    font-size: large;
 }

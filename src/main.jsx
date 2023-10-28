@@ -7,7 +7,7 @@ import PasswordResetPage from './pages/Auth/PasswordReset'
 import HomePage from './pages/Main/Home'
 import MovieProfilePage from './pages/Main/Movie'
 import Settings from './pages/Main/Settings'
-// import PrivateRoutes from './utils/PrivateRoute'
+import PrivateRoutes from './utils/PrivateRoute'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -20,11 +20,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path='/PasswordReset' element={<PasswordResetPage />} />
                 <Route path='/Movie' element={<MovieProfilePage />} />
 
-                <Route path='/Settings' element={<Settings />} />
-
-                {/* <Route element={<PrivateRoutes />}>
+                <Route element={<PrivateRoutes />}>
                     <Route path='/Settings' element={<Settings />} />
-                </Route> */}
+                </Route>
+
                 <Route path="*" element={<p>There is nothing here: 404!</p>} />
 
             </Routes>
