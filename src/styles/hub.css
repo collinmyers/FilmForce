@@ -270,3 +270,17 @@ button:hover {
     font-weight: bold;
     font-size: large;
 }
+
+input[type="search"] {
+    padding: 10px 30px;
+    margin: 8px auto;
+    border-radius: 4px;
+}
+
+input[type="searchbutton"] {
+    background-color: #E50914;
+    color: #FFFFFF;
+    margin-top: 5px;
+    border-radius: 2px;
+    cursor: pointer;
+}
