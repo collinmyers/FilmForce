@@ -8,6 +8,7 @@ import HomePage from './pages/Main/Home'
 import MovieProfilePage from './pages/Main/Movie'
 import Settings from './pages/Main/Settings'
 import PrivateRoutes from './utils/PrivateRoute'
+import SearchPage from './pages/Main/Search'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -19,7 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path='/Signup' element={<SignupPage />} />
                 <Route path='/PasswordReset' element={<PasswordResetPage />} />
                 <Route path='/Movie' element={<MovieProfilePage />} />
-
+                <Route path='/Search' element={<SearchPage />} />
                 <Route element={<PrivateRoutes />}>
                     <Route path='/Settings' element={<Settings />} />
                 </Route>

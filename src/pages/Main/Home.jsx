@@ -54,7 +54,7 @@ const Home = () => {
             <nav className="main-nav">
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/Movie">Movies</a></li>
+                    <li><a href="/Search">Search</a></li>
                     {loggedIn && <li><a href="/Settings">Settings</a></li>}
                     {loggedIn ? (
                         <li> <a onClick={handleLogout} id='logout'>Logout</a></li>
