@@ -3,6 +3,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useState, useEffect } from 'react';
 import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { getTopMovies } from '../../../services/TMDB';
 
 const Home = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -11,6 +12,29 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        fetchTopMovies();
+        async function fetchTopMovies() {
+            try {
+                const [titles, posters, descriptions, releaseDates] = await getTopMovies();
+                const movieListElement = document.getElementById('movie-list');
+                    for (let i = 0; i < 6; i += 2) {
+                    const row = document.createElement('div');
+                    row.classList.add('row');
+                    for (let j = i; j < i + 2 && j < titles.length; j++) {
+                        const movieElement = document.createElement('div');
+                        movieElement.classList.add('movie');
+                        movieElement.innerHTML = `
+                            <img src="${posters[j]}" alt="Movie Poster">
+                            <h1>${titles[j]}</h1>
+                        `;
+                        row.appendChild(movieElement);
+                    }
+                    movieListElement.appendChild(row);
+                }
+            } catch (error) {
+                console.error('Error fetching top movies:', error);
+            }
+        }
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log('User is signed in:', user);
@@ -42,8 +66,7 @@ const Home = () => {
                 console.error('Logout Error:', error);
             });
     };
-
-
+      
     return (
         <div>
             <header className="site-header sh-home">
@@ -67,18 +90,10 @@ const Home = () => {
             <main className="content" id="movies-section">
                 <div className="movie-home-section">
                     <section className="featured-movies">
-                        <h2 className="main-titles">Featured Movies</h2>
-                        <h3 className="movie-name">Oppenheimer</h3>
-                        <iframe className="youtube-trailer" src="https://www.youtube.com/embed/uYPbbksJxIg?si=KiluKBgH0hunwCXY" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-                        <h3 className="movie-name">Saw X</h3>
-                        <iframe className="youtube-trailer" src="https://www.youtube.com/embed/t3PzUo4P21c?si=q0nodolSFknjyU1x" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-                    </section>
-                    <section className="popular-movies">
-                        <h2 className="main-titles">Popular Movies</h2>
-                        <h3 className="movie-name">Shrek</h3>
-                        <iframe className="youtube-trailer" src="https://www.youtube.com/embed/lNfei4YCZ5o?si=JveGRsUna_eZploa" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-                        <h3 className="movie-name">Talladega Nights</h3>
-                        <iframe className="youtube-trailer" src="https://www.youtube.com/embed/YfGRg0FLxtE?si=GBLyIeE9VccanV5w" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                        <h2>Trending Movies</h2>
+                        <div id="movie-list">
+                           
+                        </div>
                     </section>
                 </div>
                 <section id="new-reviews">
