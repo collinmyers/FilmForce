@@ -1,4 +1,5 @@
 import '../../styles/hub.css'
+import { getTopMovies } from '../../../services/TMDB'
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useState, useEffect } from 'react';
 import { auth } from '../../../services/firebaseConfig';
@@ -9,7 +10,13 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const navigate = useNavigate();
-
+    
+    //array variable
+    const movieArray = getTopMovies();
+    
+    //trying to access array
+    console.log('movie 1: ', movieArray[0].title);
+   
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {

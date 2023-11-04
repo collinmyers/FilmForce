@@ -7,18 +7,15 @@ export const getTopMovies = async () => {
   try {
     const response = await axios.get(`${url}/discover/movie${api_key}`);
     const responseData = response.data; // Access the response data directly
+    const moviesArray = responseData.results;
 
-    // Access the first result
-    const firstMovie = responseData.results[0];
-
-    if (firstMovie) {
-      console.log("First Movie Title:", firstMovie.title);
-      console.log("First Movie Overview:", firstMovie.overview);
-    } else {
-      console.log("No results found.");
-    }
+    moviesArray.forEach((movie, index) => {
+        console.log(`Movie ${index + 1} - Title: ${movie.title}`);
+      });
+      return moviesArray;
   } catch (error) {
     console.error("Error fetching data:", error);
+    return [];
   }
 };
 
