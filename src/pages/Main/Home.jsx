@@ -1,40 +1,30 @@
-import '../../styles/hub.css'
+import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useState, useEffect } from 'react';
 import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { getTopMovies } from '../../../services/TMDB';
+import '../../styles/hub.css'
 
 const Home = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [posters, setPosters] = useState([]);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchTopMovies();
-        async function fetchTopMovies() {
+        async function fetchData() {
             try {
-                const [titles, posters, descriptions, releaseDates] = await getTopMovies();
-                const movieListElement = document.getElementById('movie-list');
-                    for (let i = 0; i < 6; i += 2) {
-                    const row = document.createElement('div');
-                    row.classList.add('row');
-                    for (let j = i; j < i + 2 && j < titles.length; j++) {
-                        const movieElement = document.createElement('div');
-                        movieElement.classList.add('movie');
-                        movieElement.innerHTML = `
-                            <img src="${posters[j]}" alt="Movie Poster">
-                            <h1>${titles[j]}</h1>
-                        `;
-                        row.appendChild(movieElement);
-                    }
-                    movieListElement.appendChild(row);
-                }
+                const [, posters] = await getTopMovies(); // We don't need titles in this case
+                setPosters(posters);
             } catch (error) {
-                console.error('Error fetching top movies:', error);
+                console.error('Error fetching top movie posters:', error);
             }
+            setIsLoading(false);
         }
+
+        fetchData();
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log('User is signed in:', user);
@@ -48,25 +38,22 @@ const Home = () => {
             console.error('Auth state change error:', error);
             setIsLoading(false);
         });
+
         return () => unsubscribe();
     }, []);
-
-    if (isLoading) {
-        return;
-    }
 
     const handleLogout = () => {
         signOut(auth)
             .then(() => {
                 setLoggedIn(false);
                 auth.currentUser.reload();
-                navigate("/")
+                navigate('/');
             })
             .catch((error) => {
                 console.error('Logout Error:', error);
             });
     };
-      
+
     return (
         <div>
             <header className="site-header sh-home">
@@ -90,9 +77,19 @@ const Home = () => {
             <main className="content" id="movies-section">
                 <div className="movie-home-section">
                     <section className="featured-movies">
-                        <h2>Trending Movies</h2>
+                        <h2>Trending Movie Posters</h2>
                         <div id="movie-list">
-                           
+                            {isLoading ? (
+                                <p>Loading...</p>
+                            ) : (
+                                <div className="movie-grid">
+                                    {posters.slice(0, 6).map((poster, index) => (
+                                        <div key={index} className="movie">
+                                            <img src={poster} alt="Movie Poster" />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </section>
                 </div>

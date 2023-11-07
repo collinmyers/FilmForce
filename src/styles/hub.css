@@ -291,3 +291,13 @@ button:hover {
     width: 48%;
     padding: 10px;
 }
+
+
+/* Styles for the container that holds movie posters */
+.movie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
