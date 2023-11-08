@@ -18,7 +18,7 @@ body {
     margin: 0;
 }
 
-.setting-nav{
+.setting-nav {
     width: 100vw;
 }
 
@@ -44,12 +44,12 @@ body {
     font-size: 18px;
 }
 
-.sh-home{
+.sh-home {
     padding-top: 0;
 }
 
 /* Style the main navigation */
-.main-nav{
+.main-nav {
     margin-top: 20px;
 }
 
@@ -144,13 +144,13 @@ button:hover {
     border-bottom: 1px;
 }
 
-#settings-title{
+#settings-title {
     color: #FFFFFF;
     margin-top: 2rem;
     margin-bottom: 2rem;
 }
 
-#acct-settings-title{
+#acct-settings-title {
     color: #E50914;
     margin-bottom: 1rem;
 }
@@ -252,21 +252,21 @@ button:hover {
     background: url('../Assets/stars.svg') no-repeat top left;
 }
 
-.rating:not(:hover) input:indeterminate + label,
-.rating:not(:hover) input:checked ~ input + label,
-.rating input:hover ~ input + label {
+.rating:not(:hover) input:indeterminate+label,
+.rating:not(:hover) input:checked~input+label,
+.rating input:hover~input+label {
     background-position: -48px 0;
 }
 
-.rating:not(:hover) input:focus-visible + label {
+.rating:not(:hover) input:focus-visible+label {
     background-position: -96px 0;
 }
 
-#logout:hover{
+#logout:hover {
     cursor: pointer;
 }
 
-.profile-info{
+.profile-info {
     font-weight: bold;
     font-size: large;
 }
@@ -277,7 +277,8 @@ button:hover {
 }
 
 .movie h1 {
-    font-size: 16px; /* Adjust the font size as needed */
+    font-size: 16px;
+    /* Adjust the font size as needed */
 }
 
 .row {
@@ -300,4 +301,11 @@ button:hover {
     justify-content: space-between;
 }
 
+.poster-row {
+    display: flex;
+    padding-bottom: 2rem;
+}
 
+.poster-row img {
+    padding-left: 2rem;
+}

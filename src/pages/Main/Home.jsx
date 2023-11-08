@@ -78,19 +78,27 @@ const Home = () => {
                 <div className="movie-home-section">
                     <section className="featured-movies">
                         <h2>Trending Movie Posters</h2>
-                        <div id="movie-list">
+                        <div className="movie-grid">
                             {isLoading ? (
                                 <p>Loading...</p>
                             ) : (
-                                <div className="movie-grid">
-                                    {posters.slice(0, 6).map((poster, index) => (
-                                        <div key={index} className="movie">
-                                            <img src={poster} alt="Movie Poster" />
-                                        </div>
-                                    ))}
+                                <div className="movie">
+                                    {posters.slice(0, 6).reduce((result, poster, index) => {
+                                        if (index % 2 === 0) {
+                                            const nextPoster = posters[index + 1];
+                                            result.push(
+                                                <div key={index} className="poster-row">
+                                                    <img src={poster} alt="Movie Poster" />
+                                                    {nextPoster && <img src={nextPoster} alt="Movie Poster" />}
+                                                </div>
+                                            );
+                                        }
+                                        return result;
+                                    }, [])}
                                 </div>
                             )}
                         </div>
+
                     </section>
                 </div>
                 <section id="new-reviews">
