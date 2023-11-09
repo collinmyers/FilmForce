@@ -77,7 +77,7 @@ const Home = () => {
             <main className="content" id="movies-section">
                 <div className="movie-home-section">
                     <section className="featured-movies">
-                        <h2>Trending Movie Posters</h2>
+                        <h2>Trending Movies</h2>
                         <div className="movie-grid">
                             {isLoading ? (
                                 <p>Loading...</p>

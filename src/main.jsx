@@ -9,7 +9,7 @@ import MovieProfilePage from './pages/Main/Movie'
 import Settings from './pages/Main/Settings'
 import PrivateRoutes from './utils/PrivateRoute'
 import SearchPage from './pages/Main/Search'
-import './index.css'
+// import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
