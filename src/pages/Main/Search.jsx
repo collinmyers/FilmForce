@@ -66,7 +66,7 @@ const Search = () => {
                 </ul>
             </nav>
 
-            <main className="content" id="search-section">
+            <main className="content content-search" id="search-section">
                 <div className="search-bar">
                     <input type="text" placeholder="Search for movies" />
                     <button>Search</button>
