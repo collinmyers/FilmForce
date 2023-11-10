@@ -321,6 +321,8 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-self: center;
+    text-align: center;
+    margin: 20px;
 }
 
 .search-bar input {
@@ -333,12 +335,6 @@ button:hover {
 .search-bar button {
     max-width: 25%;
     align-self: center;
-}
-
-/* Add these styles to your hub.css file */
-.search-bar {
-    text-align: center;
-    margin: 20px;
 }
 
 .search-results {
@@ -359,6 +355,6 @@ button:hover {
 }
 
 .movie-result img {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
 }
