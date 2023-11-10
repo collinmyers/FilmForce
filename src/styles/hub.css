@@ -24,6 +24,7 @@ body {
 
 /* Style the site header */
 .site-header {
+    margin-top: 2rem;
     background-color: #000000;
     color: #FFFFFF;
     text-align: center;
@@ -51,7 +52,7 @@ body {
 /* Style the main navigation */
 .main-nav {
     margin-top: 20px;
-    
+
 }
 
 
@@ -311,13 +312,13 @@ button:hover {
     padding-left: 2rem;
 }
 
-.content-search{
+.content-search {
     justify-content: center;
     display: flex;
     flex-direction: column;
 }
 
-.search-bar{
+.search-bar {
     display: flex;
     flex-direction: column;
     align-self: center;
@@ -357,4 +358,8 @@ button:hover {
 .movie-result img {
     max-width: 80%;
     height: auto;
+}
+
+.account-settings button {
+    width: 195px ;
 }
