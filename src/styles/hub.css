@@ -313,11 +313,14 @@ button:hover {
 
 .content-search{
     justify-content: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .search-bar{
     display: flex;
     flex-direction: column;
+    align-self: center;
 }
 
 .search-bar input {

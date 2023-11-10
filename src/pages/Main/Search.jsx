@@ -57,7 +57,10 @@ const Search = () => {
             }
 
             const responseData = await response.json();
-            const resultsArray = responseData.results.slice(0, 10); // Display top 10 results
+
+            const resultsLength = responseData.results.length;
+
+            const resultsArray = responseData.results.slice(0, resultsLength);
 
             setSearchResults(resultsArray);
 
@@ -68,7 +71,7 @@ const Search = () => {
     };
 
     if (isLoading) {
-        return null; // or a loading spinner/message
+        return null;
     }
 
     return (
