@@ -1,14 +1,14 @@
-import '../../styles/hub.css'
+import '../../styles/hub.css';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useState, useEffect } from 'react';
 import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 
-
 const Search = () => {
-
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
 
     const navigate = useNavigate();
 
@@ -29,22 +29,47 @@ const Search = () => {
         return () => unsubscribe();
     }, []);
 
-    if (isLoading) {
-        return;
-    }
-
     const handleLogout = () => {
         signOut(auth)
             .then(() => {
                 setLoggedIn(false);
                 auth.currentUser.reload();
-                navigate("/")
+                navigate("/");
             })
             .catch((error) => {
                 console.error('Logout Error:', error);
             });
     };
 
+    const handleSearch = async () => {
+        if (searchQuery.trim() === '') {
+            alert('Please enter a search term');
+            return;
+        }
+
+        const url = "https://api.themoviedb.org/3";
+        const api_key = "?api_key=ab1e98b02987e9593b705864efaf4798";
+
+        try {
+            const response = await fetch(`${url}/search/movie${api_key}&query=${searchQuery}`);
+            if (!response.ok) {
+                throw new Error(`TMDB API request failed with status ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            const resultsArray = responseData.results.slice(0, 10); // Display top 10 results
+
+            setSearchResults(resultsArray);
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            alert('An error occurred while fetching data');
+        }
+    };
+
+    if (isLoading) {
+        return null; // or a loading spinner/message
+    }
 
     return (
         <div>
@@ -68,14 +93,29 @@ const Search = () => {
 
             <main className="content content-search" id="search-section">
                 <div className="search-bar">
-                    <input type="text" placeholder="Search for movies" />
-                    <button>Search</button>
-                    {/* <button onClick={handleSearch}>Search</button> */}
+                    <input
+                        type="text"
+                        placeholder="Search for movies"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button onClick={handleSearch}>Search</button>
+                </div>
+
+                <div className="search-results">
+                    {searchResults.map((movie) => (
+                        <div key={movie.id} className="movie-result">
+                            <h3>{movie.title}</h3>
+                            <img
+                                src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                                alt={movie.title}
+                            />
+                        </div>
+                    ))}
                 </div>
             </main>
         </div>
     );
-
 };
 
-export default Search
+export default Search;
