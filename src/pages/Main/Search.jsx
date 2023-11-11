@@ -73,6 +73,14 @@ const Search = () => {
         }
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            // If Enter key is pressed, trigger the search
+            handleSearch();
+        }
+    };
+
+
     if (isLoading) {
         return null;
     }
@@ -104,6 +112,7 @@ const Search = () => {
                         placeholder="Search for movies"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={handleKeyPress}
                     />
                     <button onClick={handleSearch}>Search</button>
                 </div>
