@@ -3,6 +3,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useState, useEffect } from 'react';
 import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import FilmForcePoster from "../../assets/FilmForce-alt.png";
 
 const Search = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -62,6 +63,8 @@ const Search = () => {
 
             const resultsArray = responseData.results.slice(0, resultsLength);
 
+            console.log(resultsArray);
+
             setSearchResults(resultsArray);
 
         } catch (error) {
@@ -109,16 +112,23 @@ const Search = () => {
                     {searchResults.map((movie) => (
                         <div key={movie.id} className="movie-result">
                             <h3>{movie.title}</h3>
-                            <img
-                                src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                                alt={movie.title}
-                            />
+                            {movie.poster_path ? (
+                                <img
+                                    src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                                    alt={movie.title}
+                                />
+                            ) : (
+                                <img
+                                    src={FilmForcePoster}
+                                    alt="FilmForce Poster"
+                                />
+                            )}
                         </div>
                     ))}
                 </div>
             </main>
         </div>
     );
-};
 
+}
 export default Search;
