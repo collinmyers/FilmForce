@@ -73,11 +73,11 @@ const MovieProfilePage = () => {
 
                     <h2 className="movie-header">Movie Ratings</h2>
                     <h3 id="FF-rating">FilmForce Rating</h3>
-                    <h4><strong>Rating: </strong> 5.0/5.0</h4>
+                    <h4><span id="home-force">5.0/5.0</span></h4>
                     <h3 id="IMDB-rating"> IMDB Rating</h3>
-                    <h4><strong>Rating: </strong> 7.9/10.0</h4>
+                    <h4><span id="home-force">7.9/10</span></h4>
                     <h3 id="RT-rating">Rotten Tomatoes Rating</h3>
-                    <h4><strong>Rating: </strong> 88%</h4>
+                    <h4><span id="home-force">88%</span></h4>
                 </section>
 
                 <section className="right">

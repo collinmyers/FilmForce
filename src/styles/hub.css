@@ -190,14 +190,16 @@ button:hover {
 
 .movie-page {
     text-align: center;
+    justify-content: center;
     display: flex;
     max-width: 80%;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 #movie-poster {
-    max-width: 40%;
-    max-height: 40%;
+    max-width: 30%;
+    max-height: auto;
+    margin-bottom: 2rem;
 }
 
 #movie-details {
@@ -218,17 +220,19 @@ button:hover {
     margin-top: 2rem;
     text-align: center;
     font-style: italic;
+   
 }
 
 .right {
     display: flex;
     flex-direction: column;
-    justify-content: left;
+    align-items: flex-end;
+    max-width: 400px;
 }
 
 #details,
 #leave-review {
-    margin-top: 3rem;
+    margin-top: 5rem;
 }
 
 #overview,
@@ -361,5 +365,9 @@ button:hover {
 }
 
 .account-settings button {
-    width: 195px ;
+    width: 195px;
+}
+
+#review-text{
+    margin-bottom: 5rem;
 }
