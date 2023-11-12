@@ -1,16 +1,17 @@
-import '../../styles/hub.css'
-import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useState, useEffect } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../../services/firebaseConfig';
-import { useNavigate } from 'react-router-dom';
-
-import Poster from '../../assets/Poster.jpg'
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const MovieProfilePage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
     const navigate = useNavigate();
+
+    const { state } = useLocation();
+
+    // Now, state contains the details passed from the previous component
+    const { title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime } = state;
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -30,7 +31,7 @@ const MovieProfilePage = () => {
     }, []);
 
     if (isLoading) {
-        return;
+        return null;
     }
 
     const handleLogout = () => {
@@ -38,7 +39,7 @@ const MovieProfilePage = () => {
             .then(() => {
                 setLoggedIn(false);
                 auth.currentUser.reload();
-                navigate("/")
+                navigate('/');
             })
             .catch((error) => {
                 console.error('Logout Error:', error);
@@ -54,7 +55,7 @@ const MovieProfilePage = () => {
             <nav className="main-nav">
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/Movie">Movies</a></li>
+                    <li><a href="/Search">Search</a></li>
                     {loggedIn && <li><a href="/Settings">Settings</a></li>}
                     {loggedIn ? (
                         <li> <a onClick={handleLogout} id='logout'>Logout</a></li>
@@ -64,11 +65,11 @@ const MovieProfilePage = () => {
                 </ul>
             </nav>
 
-            <h1 className="movie-title">Shrek</h1>
+            <h1 className="movie-title">{title}</h1>
             <div className="movie-page">
                 <section className="left">
 
-                    <img id="movie-poster" src={Poster} alt="Shrek Movie Poster" />
+                    <img id="movie-poster" src={poster} alt="Movie Poster" />
 
                     <h2 className="movie-header">Movie Ratings</h2>
                     <h3 id="FF-rating">FilmForce Rating</h3>
@@ -82,17 +83,17 @@ const MovieProfilePage = () => {
                 <section className="right">
                     <div id="overview">
                         <h2 className="movie-header">Movie Overview</h2>
-                        <p>A mean lord exiles fairytale creatures to the swamp of a grumpy ogre, who must go on a quest and rescue a princess for the lord in order to get his land back.</p>
+                        <p>{overview}</p>
                     </div>
 
                     <div id="details">
                         <h2 className="movie-header">Movie Details</h2>
                         <ul id="movie-details">
-                            <li><strong>Release Date:</strong> April 21, 2001</li>
-                            <li><strong>Genre:</strong> Animation, Adventure, Comedy</li>
-                            <li><strong>Directors:</strong> Andrew Adamson & Vicky Jenson</li>
-                            <li><strong>Starring:</strong> Mike Myers, Eddie Murphy, Cameron Diaz</li>
-                            <li><strong>Runtime:</strong> 1h 30min</li>
+                            <li><strong>Release Date: </strong>{releaseDate}</li>
+                            <li><strong>Genre: </strong>{genres}</li>
+                            <li><strong>Directors: </strong>{top3Directors}</li>
+                            <li><strong>Starring:</strong>{top3Cast}</li>
+                            <li><strong>Runtime: </strong>{runtime}</li>
                         </ul>
                     </div>
                     <div id="leave-review">
@@ -118,5 +119,6 @@ const MovieProfilePage = () => {
         </div>
     );
 };
+
 
 export default MovieProfilePage;
