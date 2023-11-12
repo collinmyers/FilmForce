@@ -371,3 +371,9 @@ button:hover {
 #review-text{
     margin-bottom: 5rem;
 }
+
+#overview,
+#details,
+#leave-review {
+    align-self: center;
+}
