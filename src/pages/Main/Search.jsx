@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import FilmForcePoster from "../../assets/FilmForce-alt.png";
+import { getTopMovies } from '../../../services/TMDB'; 
 
 const Search = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    // const [selectedMovie, setSelectedMovie] = useState(null);
+    const [trendingMovies, setTrendingMovies] = useState({ titles: [], posters: [] });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,6 +26,15 @@ const Search = () => {
             setIsLoading(false);
         });
         return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        const fetchTrendingMovies = async () => {
+            const [titles, posters, id] = await getTopMovies();
+            setTrendingMovies({ titles, posters , id});
+        };
+
+        fetchTrendingMovies();
     }, []);
 
     const handleLogout = () => {
@@ -163,26 +173,39 @@ const Search = () => {
                 </div>
 
                 <div className="search-results">
-                    {searchResults.map((movie) => (
-                        <div key={movie.id} className="movie-result">
-                            <h3>{movie.title}</h3>
-                            {/* Make the poster clickable */}
-                            {movie.poster_path ? (
+                    {searchResults.length > 0 ? (
+                        searchResults.map((movie) => (
+                            <div key={movie.id} className="movie-result">
+                                <h3>{movie.title}</h3>
+                                {movie.poster_path ? (
+                                    <img
+                                        src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                                        alt={movie.title}
+                                        onClick={() => fetchMovieDetails(movie.id)} // Pass the entire movie object
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                ) : (
+                                    <img
+                                        src={FilmForcePoster}
+                                        alt="FilmForce Poster"
+                                        onClick={() => fetchMovieDetails(movie.id)}
+                                    />
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        trendingMovies.titles.map((title, index) => (
+                            <div key={index} className="movie-result">
+                                <h3>{title}</h3>
                                 <img
-                                    src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                                    alt={movie.title}
-                                    onClick={() => fetchMovieDetails(movie.id)} // Pass the entire movie object
+                                    src={trendingMovies.posters[index]}
+                                    alt={title}
+                                    onClick={() => fetchMovieDetails(trendingMovies.id[index])}
                                     style={{ cursor: 'pointer' }}
                                 />
-                            ) : (
-                                <img
-                                    src={FilmForcePoster}
-                                    alt="FilmForce Poster"
-                                    onClick={() => fetchMovieDetails(movie.id)}
-                                />
-                            )}
-                        </div>
-                    ))}
+                            </div>
+                        ))
+                    )}
                 </div>
 
                 {/* Pass selectedMovie to the Movie component */}

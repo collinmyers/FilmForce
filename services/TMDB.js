@@ -11,18 +11,16 @@ export const getTopMovies = async () => {
 
         const titles = [];
         const posters = [];
-        // const descriptions = [];
-        // const releaseDates = [];
+        const id = [];
 
         for (let i = 0; i < resultsArray.length; i++) {
             const movie = resultsArray[i];
             titles.push(movie.title);
             posters.push(`https://image.tmdb.org/t/p/original/${movie.poster_path}`);
-            // descriptions.push(movie.overview);
-            // releaseDates.push(movie.release_date);
+            id.push(movie.id);
         }
 
-        return [titles, posters]
+        return [titles, posters, id]
 
     } catch (error) {
         console.error("Error fetching data:", error);
