@@ -178,6 +178,7 @@ const Search = () => {
                                 <img
                                     src={FilmForcePoster}
                                     alt="FilmForce Poster"
+                                    onClick={() => fetchMovieDetails(movie.id)}
                                 />
                             )}
                         </div>
