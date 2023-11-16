@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import FilmForcePoster from "../../assets/FilmForce-alt.png";
-import { getTopMovies } from '../../../services/TMDB'; 
+import { getTopMovies } from '../../../services/TMDB';
+import axios from "axios-https-proxy-fix";
 
 const Search = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -31,7 +32,7 @@ const Search = () => {
     useEffect(() => {
         const fetchTrendingMovies = async () => {
             const [titles, posters, id] = await getTopMovies();
-            setTrendingMovies({ titles, posters , id});
+            setTrendingMovies({ titles, posters, id });
         };
 
         fetchTrendingMovies();
@@ -48,6 +49,24 @@ const Search = () => {
                 console.error('Logout Error:', error);
             });
     };
+
+    const getRatings = async function (releaseDate, movieTitle) {
+        const words = releaseDate.split(' ');
+        const year = words[words.length - 1];
+
+        try {
+            const response = await axios.get(`http://localhost:3001/api/scrape`, {
+                params: {
+                    title: movieTitle,
+                    year: year
+                }
+            });
+
+            return response;
+        } catch (error) {
+            console.error('Error fetching ratings:', error);
+        }
+    }
 
     const fetchMovieDetails = async (movieId) => {
         try {
@@ -76,16 +95,20 @@ const Search = () => {
             const runtimeHours = Math.floor(movieDetails.runtime / 60);
             const runtimeMinutes = movieDetails.runtime % 60;
 
+            const enDate = new Date(movieDetails.release_date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+
+            const ratings = await getRatings(enDate, movieDetails.title);
+
             // Map the required fields
             const details = {
                 id: movieDetails.id,
                 title: movieDetails.title,
                 genres: movieDetails.genres.map((genre) => genre.name).join(', '),
-                releaseDate: new Date(movieDetails.release_date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                }),
+                releaseDate: enDate,
                 overview: movieDetails.overview,
                 poster: movieDetails.poster_path ? `https://image.tmdb.org/t/p/original/${movieDetails.poster_path}` : FilmForcePoster,
                 top3Cast,
@@ -94,6 +117,8 @@ const Search = () => {
                     runtimeHours > 0
                         ? `${runtimeHours} ${runtimeHours === 1 ? 'hour' : 'hours'}${runtimeMinutes > 0 ? ` ${runtimeMinutes} minutes` : ''}`
                         : `${runtimeMinutes} minutes`,
+                imdbRating: JSON.stringify(ratings.data.scores.imdb).slice(1, -1),
+                rottenTomatoesRating: JSON.stringify(ratings.data.scores.rt).slice(1, -1)
             };
 
             // Navigate to the movie page with the movie details
@@ -176,7 +201,6 @@ const Search = () => {
                     {searchResults.length > 0 ? (
                         searchResults.map((movie) => (
                             <div key={movie.id} className="movie-result">
-                                <h3>{movie.title}</h3>
                                 {movie.poster_path ? (
                                     <img
                                         src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
@@ -185,18 +209,23 @@ const Search = () => {
                                         style={{ cursor: 'pointer' }}
                                     />
                                 ) : (
-                                    <img
-                                        src={FilmForcePoster}
-                                        alt="FilmForce Poster"
-                                        onClick={() => fetchMovieDetails(movie.id)}
-                                    />
+                                    <>
+                                        <br />
+                                        <br />
+                                        <h3>{movie.title}</h3>
+                                        <img
+                                            src={FilmForcePoster}
+                                            alt="FilmForce Poster"
+                                            onClick={() => fetchMovieDetails(movie.id)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </>
                                 )}
                             </div>
                         ))
                     ) : (
                         trendingMovies.titles.map((title, index) => (
                             <div key={index} className="movie-result">
-                                <h3>{title}</h3>
                                 <img
                                     src={trendingMovies.posters[index]}
                                     alt={title}

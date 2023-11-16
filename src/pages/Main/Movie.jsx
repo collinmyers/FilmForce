@@ -6,14 +6,17 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const MovieProfilePage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+
     const navigate = useNavigate();
 
     const { state } = useLocation();
 
     // Now, state contains the details passed from the previous component
-    const { title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime } = state;
+    const { title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime, imdbRating, rottenTomatoesRating } = state;
+
 
     useEffect(() => {
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log('User is signed in:', user);
@@ -28,7 +31,7 @@ const MovieProfilePage = () => {
             setIsLoading(false);
         });
         return () => unsubscribe();
-    }, []);
+    },);
 
     if (isLoading) {
         return null;
@@ -75,9 +78,9 @@ const MovieProfilePage = () => {
                     <h3 id="FF-rating">FilmForce Rating</h3>
                     <h4><span id="home-force">5.0/5.0</span></h4>
                     <h3 id="IMDB-rating"> IMDB Rating</h3>
-                    <h4><span id="home-force">7.9/10</span></h4>
+                    <h4><span id="home-force">{imdbRating}</span></h4>
                     <h3 id="RT-rating">Rotten Tomatoes Rating</h3>
-                    <h4><span id="home-force">88%</span></h4>
+                    <h4><span id="home-force">{rottenTomatoesRating}</span></h4>
                 </section>
 
                 <section className="right">
