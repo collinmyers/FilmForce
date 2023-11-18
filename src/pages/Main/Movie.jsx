@@ -12,7 +12,7 @@ const MovieProfilePage = () => {
     const { state } = useLocation();
 
     // Now, state contains the details passed from the previous component
-    const { title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime, imdbRating, rottenTomatoesRating } = state;
+    const { id, title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime, imdbRating, rottenTomatoesRating } = state;
 
 
     useEffect(() => {
