@@ -80,7 +80,7 @@ const Search = () => {
 
             if (snapshot.empty) {
                 console.log('No ratings found for the movie.');
-                return null; // or any default value
+                return '-'; // or any default value
             }
 
             let totalRating = 0;
@@ -98,7 +98,7 @@ const Search = () => {
             return averageRating;
         } catch (error) {
             console.error('Error calculating average rating:', error);
-            return null; // or handle the error appropriately
+            return 'ERR'; // or handle the error appropriately
         }
     };
 
