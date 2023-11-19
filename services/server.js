@@ -1,5 +1,5 @@
 import express from "express";
-import scoreScraper from "./scoreScraper.js"
+import fetchScores from "./fetchScores.js"
 import cors from "cors";
 
 const app = express();
@@ -11,12 +11,13 @@ app.use(cors({
 
 const port = 3001; // Choose a port
 
-app.get("/api/scrape", async (req, res) => {
-    const { title, year } = req.query;
+app.get("/api/scores", async (req, res) => {
+    const { movieID, movieName, releaseDate } = req.query;
 
     try {
-        const ratings = await scoreScraper(title, year);
-        console.log(ratings)
+        const ratings = await fetchScores(movieID, movieName, releaseDate);
+        // console.log(JSON.stringify(ratings));
+        console.log(`${movieName} - IMDB: ${ratings[0]} | RT: ${ratings[1]}`)
         res.json({
             scores: {
                 imdb: ratings[0],
