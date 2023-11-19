@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../../../services/firebaseConfig';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { auth, db } from '../../../services/firebaseConfig';
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
 const MovieProfilePage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [rating, setRating] = useState(null);
+    const [reviewText, setReviewText] = useState('');
 
     const navigate = useNavigate();
 
     const { state } = useLocation();
 
     // Now, state contains the details passed from the previous component
-    const { id, title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime, imdbRating, rottenTomatoesRating } = state;
-
+    const { id, title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime, FFrating, imdbRating, rottenTomatoesRating } = state;
 
     useEffect(() => {
 
@@ -49,6 +51,73 @@ const MovieProfilePage = () => {
             });
     };
 
+    // Function to handle the submission of the review
+    const handleReviewSubmit = async () => {
+        if (loggedIn) {
+            const user = auth.currentUser;
+
+            if (!rating || !reviewText) {
+                alert('Please provide both a rating and a review text.');
+
+                const reviewsQuery = query(
+                    collection(db, 'movieRatingComment'),
+                    where('movieID', '==', id),
+                    where('userID', '==', user.uid)
+                );
+
+                const existingReviews = await getDocs(reviewsQuery);
+                const data = existingReviews.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+                console.log(data);
+
+                return;
+            }
+
+            try {
+                // Check if the user already has a review for this movie
+                const reviewsQuery = query(
+                    collection(db, 'movieRatingComment'),
+                    where('movieID', '==', id),
+                    where('userID', '==', user.uid)
+                );
+
+                const existingReviews = await getDocs(reviewsQuery);
+
+                if (!existingReviews.empty) {
+                    alert('You have already submitted a review for this movie.');
+                    return;
+                }
+
+                // Add the review to Firestore
+                await addDoc(collection(db, 'movieRatingComment'), {
+                    movieID: id,
+                    FilmForceRating: rating,
+                    userReview: reviewText,
+                    userID: user.uid,
+                });
+
+                // Optionally, you can reset the state after submitting the review
+                setRating(null);
+                setReviewText('');
+                alert('Review submitted successfully!');
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('An error occurred while submitting the review. Please try again.');
+            }
+        }
+        else {
+            alert('Please log in to leave a review!');
+        }
+    };
+
+    const handleRatingChange = (event) => {
+        setRating(parseInt(event.target.value, 10));
+    };
+
+    const handleReviewTextChange = (event) => {
+        setReviewText(event.target.value);
+    };
+
     return (
         <div>
             <header className="site-header">
@@ -76,7 +145,7 @@ const MovieProfilePage = () => {
 
                     <h2 className="movie-header">Movie Ratings</h2>
                     <h3 id="FF-rating">FilmForce Rating</h3>
-                    <h4><span id="home-force">5.0/5.0</span></h4>
+                    <h4><span id="home-force">{FFrating}</span></h4>
                     <h3 id="IMDB-rating"> IMDB Rating</h3>
                     <h4><span id="home-force">{imdbRating}</span></h4>
                     <h3 id="RT-rating">Rotten Tomatoes Rating</h3>
@@ -102,20 +171,30 @@ const MovieProfilePage = () => {
                     <div id="leave-review">
                         <h2 className="movie-header">Leave a Review and Rating</h2>
                         <div className="rating">
-                            <input id="rating1" type="radio" name="rating" value="1" />
-                            <label htmlFor="rating1">1</label>
-                            <input id="rating2" type="radio" name="rating" value="2" />
-                            <label htmlFor="rating2">2</label>
-                            <input id="rating3" type="radio" name="rating" value="3" />
-                            <label htmlFor="rating3">3</label>
-                            <input id="rating4" type="radio" name="rating" value="4" />
-                            <label htmlFor="rating4">4</label>
-                            <input id="rating5" type="radio" name="rating" value="5" />
-                            <label htmlFor="rating5">5</label>
+                            {[1, 2, 3, 4, 5].map((value) => (
+                                <React.Fragment key={value}>
+                                    <input
+                                        id={`rating${value}`}
+                                        type="radio"
+                                        name="rating"
+                                        value={value}
+                                        onChange={handleRatingChange}
+                                        checked={rating === value}
+                                    />
+                                    <label htmlFor={`rating${value}`}>{value}</label>
+                                </React.Fragment>
+                            ))}
                         </div>
                         <label htmlFor="review-text">What did you think about the movie:</label>
                         <br />
-                        <textarea id="review-text" rows="10" cols="50" />
+                        <textarea
+                            id="review-text"
+                            rows="10"
+                            cols="50"
+                            value={reviewText}
+                            onChange={handleReviewTextChange}
+                        />
+                        <button onClick={handleReviewSubmit}>Submit Review</button>
                     </div>
                 </section>
             </div>

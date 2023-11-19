@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import FilmForcePoster from "../../assets/FilmForce-alt.png";
 import { getTopMovies } from '../../../services/TMDB';
 import axios from "axios-https-proxy-fix";
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { auth, db } from '../../../services/firebaseConfig';
 
 const Search = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -68,6 +69,39 @@ const Search = () => {
         }
     }
 
+    const calculateAverageRating = async (movieID) => {
+        try {
+            const ratingsQuery = query(
+                collection(db, 'movieRatingComment'),
+                where('movieID', '==', movieID)
+            );
+
+            const snapshot = await getDocs(ratingsQuery);
+
+            if (snapshot.empty) {
+                console.log('No ratings found for the movie.');
+                return null; // or any default value
+            }
+
+            let totalRating = 0;
+            let numberOfRatings = 0;
+
+            snapshot.forEach((doc) => {
+                const rating = doc.data().FilmForceRating;
+                totalRating += rating;
+                numberOfRatings++;
+            });
+
+            const averageRating = totalRating / numberOfRatings;
+
+            console.log('Average Rating:', averageRating);
+            return averageRating;
+        } catch (error) {
+            console.error('Error calculating average rating:', error);
+            return null; // or handle the error appropriately
+        }
+    };
+
     const fetchMovieDetails = async (movieId) => {
         try {
             const url = "https://api.themoviedb.org/3";
@@ -103,6 +137,8 @@ const Search = () => {
 
             const ratings = await getRatings(enDate, movieDetails.title);
 
+            const ourRating = await calculateAverageRating(movieDetails.id);
+
             // Map the required fields
             const details = {
                 id: movieDetails.id,
@@ -117,6 +153,7 @@ const Search = () => {
                     runtimeHours > 0
                         ? `${runtimeHours} ${runtimeHours === 1 ? 'hour' : 'hours'}${runtimeMinutes > 0 ? ` ${runtimeMinutes} minutes` : ''}`
                         : `${runtimeMinutes} minutes`,
+                FFrating: ourRating + '/5',
                 imdbRating: JSON.stringify(ratings.data.scores.imdb).slice(1, -1),
                 rottenTomatoesRating: JSON.stringify(ratings.data.scores.rt).slice(1, -1)
             };
