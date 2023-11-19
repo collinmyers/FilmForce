@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import FilmForcePoster from "../../assets/FilmForce-alt.png";
 import { getTopMovies } from '../../../services/TMDB';
 import axios from "axios-https-proxy-fix";
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../../services/firebaseConfig';
 
 const Search = () => {

@@ -58,18 +58,6 @@ const MovieProfilePage = () => {
 
             if (!rating || !reviewText) {
                 alert('Please provide both a rating and a review text.');
-
-                const reviewsQuery = query(
-                    collection(db, 'movieRatingComment'),
-                    where('movieID', '==', id),
-                    where('userID', '==', user.uid)
-                );
-
-                const existingReviews = await getDocs(reviewsQuery);
-                const data = existingReviews.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-
-                console.log(data);
-
                 return;
             }
 
