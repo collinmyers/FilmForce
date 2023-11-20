@@ -12,7 +12,7 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
     let rottenTomatoesScore = undefined;
 
     try {
-        console.log("api")
+        console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to use OMDB...\x1b[0m`)
         const tmdbAPIKey = "?api_key=ab1e98b02987e9593b705864efaf4798";
 
         const res = await fetch(`https://api.themoviedb.org/3/movie/${movieID}/external_ids${tmdbAPIKey}`);
@@ -26,34 +26,30 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
         imdbScore = `${omdbDetails.imdbRating}/10`;
         rottenTomatoesScore = omdbDetails.Ratings[1].Value;
 
-        console.log(imdbScore)
-        console.log(rottenTomatoesScore)
-
         if (imdbScore === undefined || rottenTomatoesScore === undefined) throw Error;
+        else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved...\x1b[0m`)
 
     } catch {
         try {
 
-            console.log("sscrape")
-
             if (rottenTomatoesScore === undefined) {
                 console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Rotten Tomatoes...\x1b[0m`)
-                const rtHTML = await getPage(`https://www.rottentomatoes.com/m/${rottenTomatoesFormatter(movieName)}`);
 
+                const rtHTML = await getPage(`https://www.rottentomatoes.com/m/${rottenTomatoesFormatter(movieName)}`);
                 const rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20) + "%";
-            }
+
+            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from Rotten Tomatoes...\x1b[0m`)
 
             if (imdbScore === undefined) {
                 console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape IMDB...\x1b[0m`)
+
                 const imdbHTML = await getPage(`https://www.imdb.com/title/${movieID}`);
-
                 const imdbScore = imdbHTML.substring(imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 22, imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 25) + "/10";
-            }
-
-            console.log(imdbScore)
-            console.log(rottenTomatoesScore)
+            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from IMDB...\x1b[0m`)
 
             if (imdbScore === undefined || rottenTomatoesScore === undefined) throw Error;
+            else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved...\x1b[0m`)
+
 
         } catch {
 
@@ -69,9 +65,11 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                 imdbScore = ratingsSection.substring(ratingsSection.indexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('/10') + 3);
 
                 if (imdbScore === undefined || imdbScore.length > 6) {
+                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mScore(s) Unable to Get Score ...\x1b[0m`)
                     imdbScore = "N/A";
                 }
-            }
+
+            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) IMDB Score Retrieved from Google...\x1b[0m`)
 
 
             if (rottenTomatoesScore === undefined) {
@@ -79,14 +77,13 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
 
 
                 if (rottenTomatoesScore === undefined || rottenTomatoesScore.length > 3) {
+                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mScore(s) Unable to Get Score ...\x1b[0m`)
                     rottenTomatoesScore = "N/A";
                 }
-            }
+
+            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Rotten Tomatoes Score Retrieved from Google ...\x1b[0m`)
         }
     }
-
-    console.log(imdbScore)
-    console.log(rottenTomatoesScore)
 
     return [imdbScore, rottenTomatoesScore]
 }
