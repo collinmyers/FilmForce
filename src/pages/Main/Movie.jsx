@@ -15,7 +15,10 @@ const MovieProfilePage = () => {
     const { state } = useLocation();
 
     // Now, state contains the details passed from the previous component
-    const { id, title, genres, releaseDate, overview, poster, top3Cast, top3Directors, runtime, FFrating, imdbRating, rottenTomatoesRating } = state;
+    const {
+        id, title, genres, releaseDate, overview, poster, top3Cast,
+        top3Directors, runtime, FFrating, imdbRating, rottenTomatoesRating
+    } = state;
 
     useEffect(() => {
 
@@ -164,7 +167,7 @@ const MovieProfilePage = () => {
                             <li><strong>Release Date: </strong>{releaseDate}</li>
                             <li><strong>Genre: </strong>{genres}</li>
                             <li><strong>Directors: </strong>{top3Directors}</li>
-                            <li><strong>Starring:</strong>{top3Cast}</li>
+                            <li><strong>Starring: </strong>{top3Cast}</li>
                             <li><strong>Runtime: </strong>{runtime}</li>
                         </ul>
                     </div>
@@ -194,7 +197,7 @@ const MovieProfilePage = () => {
                             value={reviewText}
                             onChange={handleReviewTextChange}
                         />
-                        <button onClick={handleReviewSubmit}>Submit Review</button>
+                        <button className="movieReviewSubmit" onClick={handleReviewSubmit}>Submit Review</button>
                     </div>
                 </section>
             </div>

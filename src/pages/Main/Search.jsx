@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import FilmForcePoster from "../../assets/FilmForce-alt.png";
 import { getTopMovies } from '../../../services/TMDB';
 import axios from "axios-https-proxy-fix";
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../../services/firebaseConfig';
 
 const Search = () => {
@@ -27,16 +27,14 @@ const Search = () => {
             console.error('Auth state change error:', error);
             setIsLoading(false);
         });
-        return () => unsubscribe();
-    }, []);
 
-    useEffect(() => {
         const fetchTrendingMovies = async () => {
             const [titles, posters, id] = await getTopMovies();
             setTrendingMovies({ titles, posters, id });
         };
-
         fetchTrendingMovies();
+
+        return () => unsubscribe();
     }, []);
 
     const handleLogout = () => {
@@ -51,24 +49,6 @@ const Search = () => {
             });
     };
 
-    const getRatings = async function (releaseDate, movieTitle) {
-        const words = releaseDate.split(' ');
-        const year = words[words.length - 1];
-
-        try {
-            const response = await axios.get(`http://localhost:3001/api/scrape`, {
-                params: {
-                    title: movieTitle,
-                    year: year
-                }
-            });
-
-            return response;
-        } catch (error) {
-            console.error('Error fetching ratings:', error);
-        }
-    }
-
     const calculateAverageRating = async (movieID) => {
         try {
             const ratingsQuery = query(
@@ -80,7 +60,7 @@ const Search = () => {
 
             if (snapshot.empty) {
                 console.log('No ratings found for the movie.');
-                return '-'; // or any default value
+                return '-';
             }
 
             let totalRating = 0;
@@ -98,18 +78,39 @@ const Search = () => {
             return averageRating;
         } catch (error) {
             console.error('Error calculating average rating:', error);
-            return 'ERR'; // or handle the error appropriately
+            return 'ERR';
         }
     };
 
+    const getScores = async (imdbID, name, date) => {
+        try {
+            const response = await axios.get(`http://localhost:3001/api/scores`, {
+                params: {
+                    movieID: imdbID,
+                    movieName: name,
+                    releaseDate: date
+                }
+            });
+
+            return response;
+        } catch (error) {
+            console.error('Error fetching ratings:', error);
+        }
+    }
+
     const fetchMovieDetails = async (movieId) => {
         try {
+
             const url = "https://api.themoviedb.org/3";
             const api_key = "?api_key=ab1e98b02987e9593b705864efaf4798";
 
             // Fetch basic movie details
             const response = await fetch(`${url}/movie/${movieId}${api_key}`);
             const movieDetails = await response.json();
+
+            const res = await fetch(`${url}/movie/${movieId}/external_ids${api_key}`);
+            const externalIDs = await res.json();
+            const imdbID = externalIDs.imdb_id;
 
             // Fetch credits for top cast and directors
             const creditsResponse = await fetch(`${url}/movie/${movieId}/credits${api_key}`);
@@ -135,7 +136,7 @@ const Search = () => {
                 day: 'numeric',
             });
 
-            const ratings = await getRatings(enDate, movieDetails.title);
+            const ratings = await getScores(imdbID, movieDetails.title, enDate)
 
             const ourRating = await calculateAverageRating(movieDetails.id);
 
