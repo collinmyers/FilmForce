@@ -59,7 +59,6 @@ const Search = () => {
             const snapshot = await getDocs(ratingsQuery);
 
             if (snapshot.empty) {
-                console.log('No ratings found for the movie.');
                 return '-';
             }
 
@@ -74,11 +73,10 @@ const Search = () => {
 
             const averageRating = totalRating / numberOfRatings;
 
-            console.log('Average Rating:', averageRating);
             return averageRating;
         } catch (error) {
             console.error('Error calculating average rating:', error);
-            return 'ERR';
+            return 'N/A';
         }
     };
 
@@ -111,6 +109,8 @@ const Search = () => {
             const res = await fetch(`${url}/movie/${movieId}/external_ids${api_key}`);
             const externalIDs = await res.json();
             const imdbID = externalIDs.imdb_id;
+
+            // console.log("imdb id" + imdbID);
 
             // Fetch credits for top cast and directors
             const creditsResponse = await fetch(`${url}/movie/${movieId}/credits${api_key}`);

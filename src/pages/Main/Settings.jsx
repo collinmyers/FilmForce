@@ -16,10 +16,8 @@ export default function Settings() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('User is signed in:', user);
                 setLoggedIn(true);
             } else {
-                console.log('No user is signed in.');
                 setLoggedIn(false);
             }
             setIsLoading(false);
@@ -46,7 +44,7 @@ export default function Settings() {
                 })
             });
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
 
     };
@@ -72,7 +70,7 @@ export default function Settings() {
             alert("Account Successfully Deleted");
 
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     };
 

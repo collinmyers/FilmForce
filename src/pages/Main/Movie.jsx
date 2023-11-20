@@ -24,10 +24,8 @@ const MovieProfilePage = () => {
 
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('User is signed in:', user);
                 setLoggedIn(true);
             } else {
-                console.log('No user is signed in.');
                 setLoggedIn(false);
             }
             setIsLoading(false);

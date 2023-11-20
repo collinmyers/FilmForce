@@ -16,7 +16,6 @@ app.get("/api/scores", async (req, res) => {
 
     try {
         const ratings = await fetchScores(movieID, movieName, releaseDate);
-        // console.log(JSON.stringify(ratings));
         console.log(`${movieName} - IMDB: ${ratings[0]} | RT: ${ratings[1]}`)
         res.json({
             scores: {

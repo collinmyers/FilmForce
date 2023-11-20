@@ -1,7 +1,7 @@
 "use strict";
-import axios from "axios-https-proxy-fix"; // in case proxy support is needed using library w/ proxy fix
+import axios from "axios-https-proxy-fix";
 import date from 'date-and-time'
-import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 
 export default async function fetchScores(movieID, movieName, releaseDate) {
 
@@ -10,11 +10,6 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
 
     let imdbScore = undefined;
     let rottenTomatoesScore = undefined;
-
-    // const rtHTML = await getPage(`https://www.rottentomatoes.com/m/${rottenTomatoesFormatter(movieName)}`);
-    // // rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20) + "%";
-
-    // console.log(rtHTML)
 
     try {
         console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to use OMDB...\x1b[0m`)
@@ -28,11 +23,28 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
         const omdbRes = await fetch(`http://www.omdbapi.com/?i=${imdbID}&apikey=${omdbAPIKey}`);
         const omdbDetails = await omdbRes.json();
 
-        imdbScore = `${omdbDetails.imdbRating}/10`;
-        rottenTomatoesScore = omdbDetails.Ratings[1].Value;
+        imdbScore = omdbDetails.imdbRating;
 
-        if (imdbScore === undefined || rottenTomatoesScore === undefined) throw Error;
-        else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved...\x1b[0m`)
+        if ((omdbDetails.Ratings).length > 1) {
+            rottenTomatoesScore = omdbDetails.Ratings[1].Value
+        }
+
+        if (rottenTomatoesScore.length > 3) {
+            rottenTomatoesScore = rottenTomatoesScore.substring(0, rottenTomatoesScore.indexOf('/'));
+        }
+
+        if (imdbScore === "N/A") {
+            imdbScore = undefined;
+
+        }
+        if (rottenTomatoesScore === "N/A") {
+            rottenTomatoesScore = undefined;
+        }
+
+        if (imdbScore === undefined || rottenTomatoesScore === undefined) {
+            console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get all Scores from OMDB...\x1b[0m`);
+            throw Error;
+        } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScores Retrieved from OMDB...\x1b[0m`)
 
     } catch {
         try {
@@ -41,44 +53,42 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                 console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Rotten Tomatoes...\x1b[0m`)
 
                 const rtHTML = await getPage(`https://www.rottentomatoes.com/m/${rottenTomatoesFormatter(movieName)}`);
-                rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20) + "%";
 
-            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from Rotten Tomatoes...\x1b[0m`)
+                rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20);
+
+                if (!checkForNumber(rottenTomatoesScore)) rottenTomatoesScore = undefined;
+
+            }
 
             if (imdbScore === undefined) {
                 console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape IMDB...\x1b[0m`)
 
                 const imdbHTML = await getPage(`https://www.imdb.com/title/${movieID}`);
-                imdbScore = imdbHTML.substring(imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 22, imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 25) + "/10";
-            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from IMDB...\x1b[0m`)
+                imdbScore = imdbHTML.substring(imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 22, imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 25);
 
-            if (imdbScore === undefined || rottenTomatoesScore === undefined) throw Error;
-            else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved...\x1b[0m`)
+            }
 
-
+            if ((imdbScore === undefined || rottenTomatoesScore === undefined)) {
+                console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get all Scores from IMDB or Rotten Tomatoes...\x1b[0m`);
+                throw Error;
+            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from IMDB and/or Rotten Tomatoes...\x1b[0m`)
         } catch {
 
             console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Google...\x1b[0m`)
 
-            let html = "";
-
-            html = await getPage(`https://www.google.com/search?q=${movieName}+(${year})+movie`)
-
-            console.log(`https://www.google.com/search?q=${googleFormatter(movieName)}+(${year})+movie`)
-
+            let html = await getPage(`https://www.google.com/search?q=${googleFormatter(movieName)}+(${year})+movie`)
 
             let ratingsSection = html.substring(html.indexOf('<a class="TZahnb vIUFYd"'), html.indexOf('title="Rotten Tomatoes"'));
-
 
             if (imdbScore === undefined) {
                 imdbScore = ratingsSection.substring(ratingsSection.indexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('/10') + 3);
 
                 if (imdbScore === undefined || imdbScore.length > 6) {
-                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mScore(s) Unable to Get Score ...\x1b[0m`)
+                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
                     imdbScore = "N/A";
-                }
+                } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mIMDB Score Retrieved from Google...\x1b[0m`)
 
-            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) IMDB Score Retrieved from Google...\x1b[0m`)
+            }
 
 
             if (rottenTomatoesScore === undefined) {
@@ -86,16 +96,31 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
 
 
                 if (rottenTomatoesScore === undefined || rottenTomatoesScore.length > 3) {
-                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mScore(s) Unable to Get Score ...\x1b[0m`)
+                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
                     rottenTomatoesScore = "N/A";
-                }
+                } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mRotten Tomatoes Score Retrieved from Google ...\x1b[0m`)
 
-            } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Rotten Tomatoes Score Retrieved from Google ...\x1b[0m`)
+            }
+
         }
+    }
+
+    if (!rottenTomatoesScore.includes('%')) {
+        rottenTomatoesScore = rottenTomatoesScore + '%';
+    }
+    if (!imdbScore.includes('/10')) {
+        imdbScore = imdbScore + '/10';
     }
 
     return [imdbScore, rottenTomatoesScore]
 }
+
+function checkForNumber(inputString) {
+    const numberRegex = /\d/;
+
+    return numberRegex.test(inputString);
+}
+
 
 function rottenTomatoesFormatter(inputString) {
     // Remove special characters using a regular expression
@@ -120,9 +145,8 @@ function googleFormatter(inputString) {
 
 async function getPage(url) { // Function that sends get request to designated site passed in
 
-    let userAgent = randomUserAgent(); // Passing a user agent into local variable userAgent to be used in GET request4
-
     try {
+        let userAgent = randomUserAgent(); // Passing a user agent into local variable userAgent to be used in GET request
 
         let proxy = await getProxy(); // Get random proxy
 
@@ -144,14 +168,19 @@ async function getPage(url) { // Function that sends get request to designated s
     } // If get request results in an error, display an issue and log it
 }
 
-async function getProxy() { // Gets random proxy from a list
-    const proxyArray = readFileSync('./proxy.txt', 'utf8').split('\r'); // Reading from proxy.txt
-    let unformattedproxy = proxyArray[Math.floor(Math.random() * (proxyArray.length - 1))]; // Random proxy from the array
-    let proxy = unformattedproxy.replace('\n', '') // Removing the newline character
+async function getProxy() {
+    try {
+        const fileContent = await readFile('./services/proxy.txt', 'utf8');
+        const proxyArray = fileContent.split('\r');
 
-    console.log(proxy)
+        let unformattedproxy = proxyArray[Math.floor(Math.random() * (proxyArray.length - 1))];
+        let proxy = unformattedproxy.replace('\n', ''); // Removing the newline character
 
-    return proxy.toString(); // Return string representation of the proxy
+        return proxy.toString();
+    } catch (error) {
+        console.error('Error reading the file:', error);
+        throw error;
+    }
 }
 
 function randomUserAgent() {
