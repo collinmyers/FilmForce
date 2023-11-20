@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { getDocs, query, collection } from 'firebase/firestore';
 import { auth, db } from '../../../services/firebaseConfig';
@@ -153,7 +153,7 @@ const Home = () => {
                         <ul className="review-list">
                             {newestReviews.map((review) => (
                                 <li>
-                                    <a>{`${review.movieID} ${review.FilmForceRating}/5 - ${review.userReview}`}</a>
+                                    <a>{`${review.movieName} ${review.FilmForceRating}/5 - ${review.userReview}`}</a>
                                 </li>
                             ))}
                         </ul>

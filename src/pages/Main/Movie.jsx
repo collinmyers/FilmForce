@@ -81,6 +81,7 @@ const MovieProfilePage = () => {
 
                 // Add the review to Firestore
                 await addDoc(collection(db, 'movieRatingComment'), {
+                    movieName: title,
                     movieID: id,
                     FilmForceRating: rating,
                     userReview: reviewText,

@@ -11,6 +11,11 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
     let imdbScore = undefined;
     let rottenTomatoesScore = undefined;
 
+    // const rtHTML = await getPage(`https://www.rottentomatoes.com/m/${rottenTomatoesFormatter(movieName)}`);
+    // // rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20) + "%";
+
+    // console.log(rtHTML)
+
     try {
         console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to use OMDB...\x1b[0m`)
         const tmdbAPIKey = "?api_key=ab1e98b02987e9593b705864efaf4798";
@@ -36,7 +41,7 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                 console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Rotten Tomatoes...\x1b[0m`)
 
                 const rtHTML = await getPage(`https://www.rottentomatoes.com/m/${rottenTomatoesFormatter(movieName)}`);
-                const rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20) + "%";
+                rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20) + "%";
 
             } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from Rotten Tomatoes...\x1b[0m`)
 
@@ -44,7 +49,7 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                 console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape IMDB...\x1b[0m`)
 
                 const imdbHTML = await getPage(`https://www.imdb.com/title/${movieID}`);
-                const imdbScore = imdbHTML.substring(imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 22, imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 25) + "/10";
+                imdbScore = imdbHTML.substring(imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 22, imdbHTML.indexOf('sc-bde20123-1 cMEQkK') + 25) + "/10";
             } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from IMDB...\x1b[0m`)
 
             if (imdbScore === undefined || rottenTomatoesScore === undefined) throw Error;
@@ -55,7 +60,11 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
 
             console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Google...\x1b[0m`)
 
-            let html = await getPage(`https://www.google.com/search?q=$${movieName} (${year}) movie`)
+            let html = "";
+
+            html = await getPage(`https://www.google.com/search?q=${movieName}+(${year})+movie`)
+
+            console.log(`https://www.google.com/search?q=${googleFormatter(movieName)}+(${year})+movie`)
 
 
             let ratingsSection = html.substring(html.indexOf('<a class="TZahnb vIUFYd"'), html.indexOf('title="Rotten Tomatoes"'));
@@ -98,12 +107,21 @@ function rottenTomatoesFormatter(inputString) {
     return finalString.toLowerCase();
 }
 
+function googleFormatter(inputString) {
+    // Remove special characters using a regular expression
+    const cleanedString = inputString.replace(/[^\w\s]/gi, '');
+
+    // Replace whitespaces with underscores
+    const finalString = cleanedString.replace(/\s+/g, '+');
+
+    return finalString.toLowerCase();
+}
+
 
 async function getPage(url) { // Function that sends get request to designated site passed in
 
     let userAgent = randomUserAgent(); // Passing a user agent into local variable userAgent to be used in GET request4
 
-    let data = "";
     try {
 
         let proxy = await getProxy(); // Get random proxy
@@ -117,7 +135,7 @@ async function getPage(url) { // Function that sends get request to designated s
 
         console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mUsing ${proxySplit[0]} as proxy...\x1b[0m`)
 
-        data = response.data;
+        let data = response.data;
 
         return data;
 
@@ -130,6 +148,9 @@ async function getProxy() { // Gets random proxy from a list
     const proxyArray = readFileSync('./proxy.txt', 'utf8').split('\r'); // Reading from proxy.txt
     let unformattedproxy = proxyArray[Math.floor(Math.random() * (proxyArray.length - 1))]; // Random proxy from the array
     let proxy = unformattedproxy.replace('\n', '') // Removing the newline character
+
+    console.log(proxy)
+
     return proxy.toString(); // Return string representation of the proxy
 }
 
