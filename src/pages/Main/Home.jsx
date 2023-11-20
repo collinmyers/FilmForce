@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../../../services/firebaseConfig';
+import { getDocs, query, collection } from 'firebase/firestore';
+import { auth, db } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { getTopMovies } from '../../../services/TMDB';
 import '../../styles/hub.css'
@@ -9,6 +10,8 @@ const Home = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [posters, setPosters] = useState([]);
+    const [newestReviews, setNewestReviews] = useState([]);
+    const [reviewTitles, setReviewTitles] = useState([]);
 
     const navigate = useNavigate();
 
@@ -23,6 +26,14 @@ const Home = () => {
             setIsLoading(false);
         }
 
+        const fetchNewestReviews = async () => {
+            const reviews = await getReviews();
+            if (reviews) {
+                setNewestReviews(reviews);
+            }
+        };
+
+        fetchNewestReviews();
         fetchData();
 
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -52,6 +63,41 @@ const Home = () => {
             .catch((error) => {
                 console.error('Logout Error:', error);
             });
+    };
+
+    const getReviews = async () => {
+        try {
+            const reviewsQuery = query(
+                collection(db, 'movieRatingComment')
+            );
+
+            const snapshot = await getDocs(reviewsQuery);
+
+            const reviews = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+
+            const url = "https://api.themoviedb.org/3";
+            const api_key = "?api_key=ab1e98b02987e9593b705864efaf4798";
+
+            const list = [];
+
+            reviews.forEach(async (doc) => {
+                // Fetch basic movie details
+                const response = await fetch(`${url}/movie/${doc.movieID}${api_key}`);
+                const movieDetails = await response.json();
+
+                list.push(movieDetails.title);
+            });
+
+            console.log('Newest Reviews:', reviews);
+            setReviewTitles(list);
+            return reviews;
+        } catch (error) {
+            console.error('Error fetching newest reviews:', error);
+            return null; // or handle the error appropriately
+        }
     };
 
     return (
@@ -103,13 +149,15 @@ const Home = () => {
                 </div>
                 <section id="new-reviews">
                     <h2 className="main-titles">Newest Reviews</h2>
-                    <ul className="review-list">
-                        <li><a>User 1: 8/10 - Line gondy pow pow ride around heli. White room presta grind bail crank crunchy tele pow rail derailleur giblets slash steeps berm. Bear trap pow huck, hellflip stomp method first tracks Whistler sucker hole stoked yard sale afterbang deck. Hot dogging stunt reverse camber stomp gondy gear jammer, face shots huckfest back country pow pow ollie butter carbon. Whip 180 dirtbag stunt liftie steed face plant north shore twister freshies brain bucket T-bar backside pipe.</a></li>
-                        <li><a>User 2: 7/10 - Line death cookies deck, berm nose press OTB rail stoked schwag brain bucket single track cruiser McTwist bonk. Grind travel wack back country punter heli flow yard sale first tracks. Road rash nose booter, first tracks hurl carcass ripping dirt huckfest. Wheels gnar snake bite clean heli free ride poaching dust on crust. Hellflip nose press hardtail, lid carbon BB misty. Shreddin white room gaper gondy.</a></li>
-                        <li><a>User 3: 8/10 - Pow pow brain bucket road rash piste brain bucket, flow rail. Ollie Bike schwag Ski ride whip shreddin derailleur, caballerial face shots. Manny liftie huckfest heli park stomp, skid apres flow deck. Twister frozen chicken heads chillax bonk wheelie. Endo Ski corn, shreddin schwag pow pow Bike chillax.</a></li>
-                        <li><a>User 4: 9/10 - Gondy granny gear flow over the bars, avie bail bro couloir stunt yard sale gaper hammer grunt daffy. Grind bear trap gapers switch sucker hole, sharkbite glades gnar smear face plant. Yard sale stoked bear trap, berm wheels Snowboard laps. Free ride ripping free ride death cookies pow rail smear, bonk groomer hardtail whip crunchy huckfest grind stoked.</a></li>
-                        <li><a>User 5: 6/10 - Skid piste ACL pinner, bomb gnar poaching. Method yard sale north shore Skate 180 single track greasy smear cornice cruiser. Rock roll carve dust on crust wheels snake bite BB spread eagle gapers Whistler. Newschooler white room T-bar clipless park bomb hole, spin rock roll pow rock-ectomy OTB. Skid afterbang phat bomb hole Bike brain bucket hammer frozen chicken heads bowl cruiser first tracks hero yard sale. Avie bro euro pinner betty carbon flowy afterbang bowl spread eagle gapers.</a></li>
-                    </ul>
+                    {newestReviews.length !== 0 && (
+                        <ul className="review-list">
+                            {newestReviews.map((review) => (
+                                <li>
+                                    <a>{`${review.movieID} ${review.FilmForceRating}/5 - ${review.userReview}`}</a>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </section>
             </main>
         </div>
