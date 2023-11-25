@@ -105,10 +105,10 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
         }
     }
 
-    if (!rottenTomatoesScore.includes('%')) {
+    if (!rottenTomatoesScore.includes('%') && rottenTomatoesScore !== "N/A") {
         rottenTomatoesScore = rottenTomatoesScore + '%';
     }
-    if (!imdbScore.includes('/10')) {
+    if (!imdbScore.includes('/10') && imdbScore !== "N/A") {
         imdbScore = imdbScore + '/10';
     }
 
