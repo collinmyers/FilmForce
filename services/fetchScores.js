@@ -73,35 +73,49 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                 throw Error;
             } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore(s) Retrieved from IMDB and/or Rotten Tomatoes...\x1b[0m`)
         } catch {
+            try {
+                if (rottenTomatoesScore === undefined) {
+                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Rotten Tomatoes with Year...\x1b[0m`)
 
-            console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Google...\x1b[0m`)
+                    const rtHTML = await getPage(`https://www.rottentomatoes.com/m/${rottenTomatoesFormatter(`${movieName}_${year}`)}`);
 
-            let html = await getPage(`https://www.google.com/search?q=${googleFormatter(movieName)}+(${year})+movie`)
+                    rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20);
 
-            let ratingsSection = html.substring(html.indexOf('<a class="TZahnb vIUFYd"'), html.indexOf('title="Rotten Tomatoes"'));
+                    if (!checkForNumber(rottenTomatoesScore)) rottenTomatoesScore = undefined;
 
-            if (imdbScore === undefined) {
-                imdbScore = ratingsSection.substring(ratingsSection.indexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('/10') + 3);
+                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore Retrieved from Rotten Tomatoes...\x1b[0m`)
 
-                if (imdbScore === undefined || imdbScore.length > 6) {
-                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
-                    imdbScore = "N/A";
-                } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mIMDB Score Retrieved from Google...\x1b[0m`)
+                } else {
+                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get score from Rotten Tomatoes...\x1b[0m`);
+                    throw Error;
+                }
+            } catch {
+                console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[33mAttempting to Scrape Google...\x1b[0m`)
 
+                let html = await getPage(`https://www.google.com/search?q=${googleFormatter(movieName)}+(${year})+movie`)
+
+                let ratingsSection = html.substring(html.indexOf('<a class="TZahnb vIUFYd"'), html.indexOf('title="Rotten Tomatoes"'));
+
+                if (imdbScore === undefined) {
+                    imdbScore = ratingsSection.substring(ratingsSection.indexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('/10') + 3);
+
+                    if (imdbScore === undefined || imdbScore.length > 6) {
+                        console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
+                        imdbScore = "N/A";
+                    } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mIMDB Score Retrieved from Google...\x1b[0m`)
+
+                }
+
+
+                if (rottenTomatoesScore === undefined) {
+                    rottenTomatoesScore = ratingsSection.substring(ratingsSection.lastIndexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('%</span') + 1);
+
+                    if (rottenTomatoesScore === undefined || rottenTomatoesScore.length > 3) {
+                        console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
+                        rottenTomatoesScore = "N/A";
+                    } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mRotten Tomatoes Score Retrieved from Google ...\x1b[0m`)
+                }
             }
-
-
-            if (rottenTomatoesScore === undefined) {
-                rottenTomatoesScore = ratingsSection.substring(ratingsSection.lastIndexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('%</span') + 1);
-
-
-                if (rottenTomatoesScore === undefined || rottenTomatoesScore.length > 3) {
-                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
-                    rottenTomatoesScore = "N/A";
-                } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mRotten Tomatoes Score Retrieved from Google ...\x1b[0m`)
-
-            }
-
         }
     }
 
