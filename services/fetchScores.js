@@ -86,7 +86,8 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                     console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mScore Retrieved from Rotten Tomatoes...\x1b[0m`)
 
                 } else {
-                    console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get score from Rotten Tomatoes...\x1b[0m`);
+                    if (rottenTomatoesScore === undefined)  console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get score from Rotten Tomatoes...\x1b[0m`);
+                   
                     throw Error;
                 }
             } catch {
