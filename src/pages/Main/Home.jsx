@@ -249,9 +249,8 @@ const Home = () => {
                                             const nextPoster = posters[index + 1];
                                             result.push(
                                                 <div key={index} className="poster-row">
-                                                    <img src={poster} alt="Movie Poster" 
-                                                    onClick={() => fetchMovieDetails()/>
-                                                    {nextPoster && <img src={nextPoster} alt="Movie Poster" />}
+                                                    <img src={poster} alt="Movie Poster" onClick={() => fetchMovieDetails(id[i])}/>
+                                                    {nextPoster && <img src={nextPoster} onClick={() => fetchMovieDetails(id[i +1])} alt="Movie Poster" />}
                                                 </div>
                                             );
                                         }
