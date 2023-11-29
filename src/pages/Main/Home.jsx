@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { getDocs, query, collection } from 'firebase/firestore';
+import { getDocs, query, collection, where } from 'firebase/firestore';
 import { auth, db } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { getTopMovies } from '../../../services/TMDB';
 import '../../styles/hub.css'
+
+import axios from "axios-https-proxy-fix";
+
 
 const Home = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -12,6 +15,7 @@ const Home = () => {
     const [posters, setPosters] = useState([]);
     const [newestReviews, setNewestReviews] = useState([]);
     const [reviewTitles, setReviewTitles] = useState([]);
+    const [ids, setIds] = useState([]);
 
     const navigate = useNavigate();
 
@@ -32,7 +36,7 @@ const Home = () => {
             const snapshot = await getDocs(ratingsQuery);
 
             if (snapshot.empty) {
-                return '-';
+                return '-/5';
             }
 
             let totalRating = 0;
@@ -46,7 +50,7 @@ const Home = () => {
 
             const averageRating = totalRating / numberOfRatings;
 
-            return averageRating;
+            return averageRating + "/5";
         } catch (error) {
             console.error('Error calculating average rating:', error);
             return 'N/A';
@@ -83,8 +87,6 @@ const Home = () => {
             const res = await fetch(`${url}/movie/${movieId}/external_ids${api_key}`);
             const externalIDs = await res.json();
             const imdbID = externalIDs.imdb_id;
-
-            // console.log("imdb id" + imdbID);
 
             // Fetch credits for top cast and directors
             const creditsResponse = await fetch(`${url}/movie/${movieId}/credits${api_key}`);
@@ -128,7 +130,7 @@ const Home = () => {
                     runtimeHours > 0
                         ? `${runtimeHours} ${runtimeHours === 1 ? 'hour' : 'hours'}${runtimeMinutes > 0 ? ` ${runtimeMinutes} minutes` : ''}`
                         : `${runtimeMinutes} minutes`,
-                FFrating: ourRating + '/5',
+                FFrating: ourRating,
                 imdbRating: JSON.stringify(ratings.data.scores.imdb).slice(1, -1),
                 rottenTomatoesRating: JSON.stringify(ratings.data.scores.rt).slice(1, -1)
             };
@@ -145,6 +147,8 @@ const Home = () => {
         async function fetchData() {
             try {
                 const [, posters, id] = await getTopMovies(); // We don't need titles in this case
+                // console.log(id)
+                setIds(id);
                 setPosters(posters);
             } catch (error) {
                 console.error('Error fetching top movie posters:', error);
@@ -249,8 +253,9 @@ const Home = () => {
                                             const nextPoster = posters[index + 1];
                                             result.push(
                                                 <div key={index} className="poster-row">
-                                                    <img src={poster} alt="Movie Poster" onClick={() => fetchMovieDetails(id[i])}/>
-                                                    {nextPoster && <img src={nextPoster} onClick={() => fetchMovieDetails(id[i +1])} alt="Movie Poster" />}
+                                                    <img src={poster} style={{ cursor: 'pointer' }} alt="Movie Poster" onClick={() => fetchMovieDetails(ids[index])} />
+                                                    {nextPoster && <img src={nextPoster} style={{ cursor: 'pointer' }} onClick={() => fetchMovieDetails(ids[index + 1])} alt="Movie Poster" />}
+
                                                 </div>
                                             );
                                         }

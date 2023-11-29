@@ -59,7 +59,7 @@ const Search = () => {
             const snapshot = await getDocs(ratingsQuery);
 
             if (snapshot.empty) {
-                return '-';
+                return '-/5';
             }
 
             let totalRating = 0;
@@ -73,7 +73,7 @@ const Search = () => {
 
             const averageRating = totalRating / numberOfRatings;
 
-            return averageRating;
+            return averageRating + "/5";
         } catch (error) {
             console.error('Error calculating average rating:', error);
             return 'N/A';
@@ -154,7 +154,7 @@ const Search = () => {
                     runtimeHours > 0
                         ? `${runtimeHours} ${runtimeHours === 1 ? 'hour' : 'hours'}${runtimeMinutes > 0 ? ` ${runtimeMinutes} minutes` : ''}`
                         : `${runtimeMinutes} minutes`,
-                FFrating: ourRating + '/5',
+                FFrating: ourRating,
                 imdbRating: JSON.stringify(ratings.data.scores.imdb).slice(1, -1),
                 rottenTomatoesRating: JSON.stringify(ratings.data.scores.rt).slice(1, -1)
             };
