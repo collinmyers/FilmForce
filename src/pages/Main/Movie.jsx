@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../../../services/firebaseConfig';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, getDoc } from 'firebase/firestore';
 
 const MovieProfilePage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [rating, setRating] = useState(null);
     const [reviewText, setReviewText] = useState('');
+    const [reviews, setReviews] = useState([]);
 
     const navigate = useNavigate();
 
@@ -20,7 +21,26 @@ const MovieProfilePage = () => {
         top3Directors, runtime, FFrating, imdbRating, rottenTomatoesRating
     } = state;
 
+    const fetchReviews = async () => {
+        try {
+            const reviewsQuery = query(
+                collection(db, 'movieRatingComment'),
+                where('movieID', '==', id)
+            );
+
+            const querySnapshot = await getDocs(reviewsQuery);
+
+            // Map the query snapshot to an array of review objects
+            const reviewsData = querySnapshot.docs.map(doc => doc.data());
+
+            setReviews(reviewsData);
+        } catch (error) {
+            console.error('Error fetching reviews: ', error);
+        }
+    };
+
     useEffect(() => {
+        fetchReviews();
 
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -187,7 +207,21 @@ const MovieProfilePage = () => {
                         <button className="movieReviewSubmit" onClick={handleReviewSubmit}>Submit Review</button>
                     </div>
                 </section>
+
+
             </div>
+
+            <label>{title} Reviews:</label>
+            <ul className="reviews-list">
+                {reviews.map((review, index) => (
+                    <li key={index} className="review-item">
+                        <div className="review-box">
+                            <p>{review.FilmForceRating}-5</p>
+                            <p>{review.userReview}</p>
+                        </div>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };

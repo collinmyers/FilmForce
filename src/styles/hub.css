@@ -377,3 +377,27 @@ button:hover {
 #leave-review {
     align-self: center;
 }
+
+.reviews-container {
+    margin: 20px;
+    /* Add space around the reviews container */
+}
+
+.reviews-list {
+    list-style-type: none;
+    /* Remove default list styles */
+    padding: 0;
+    /* Remove default padding */
+}
+
+.review-item {
+    margin-bottom: 20px;
+    /* Add space between each review item */
+}
+
+.review-box {
+    border: 1px solid #ccc;
+    /* Add a border to the review box */
+    padding: 10px;
+    /* Add padding to the review box */
+}
