@@ -211,17 +211,20 @@ const MovieProfilePage = () => {
 
             </div>
 
-            <label>{title} Reviews:</label>
-            <ul className="reviews-list">
-                {reviews.map((review, index) => (
-                    <li key={index} className="review-item">
-                        <div className="review-box">
-                            <p>{review.FilmForceRating}-5</p>
-                            <p>{review.userReview}</p>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            <div className='reviews-container'>
+                <label>{title} Reviews:</label>
+                <ul className="reviews-list">
+                    {reviews.map((review, index) => (
+                        <li key={index} className="review-item">
+                            <div className="review-box">
+                                <p>{review.FilmForceRating}-5</p>
+                                <p>{review.userReview}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
         </div>
     );
 };

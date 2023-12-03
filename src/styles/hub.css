@@ -379,25 +379,40 @@ button:hover {
 }
 
 .reviews-container {
-    margin: 20px;
+    display: flex;
+    margin: 50px;
+    justify-content: center;
+    flex-direction: column;
     /* Add space around the reviews container */
 }
 
 .reviews-list {
+    width: 75%;
+    border: 3px solid #ccc;
+    border-radius: 10px;
+    background-color: #151515;
     list-style-type: none;
     /* Remove default list styles */
     padding: 0;
     /* Remove default padding */
+    align-self: center;
+    margin: 20px;
 }
 
 .review-item {
-    margin-bottom: 20px;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    justify-items: center;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
     /* Add space between each review item */
 }
 
 .review-box {
-    border: 1px solid #ccc;
+    border-bottom: 1px solid #aaa;
     /* Add a border to the review box */
-    padding: 10px;
+    padding: 15px;
     /* Add padding to the review box */
 }
