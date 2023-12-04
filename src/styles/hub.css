@@ -400,18 +400,13 @@ button:hover {
 }
 
 .review-item {
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    justify-items: center;
-    justify-self: center;
-    align-self: center;
-    text-align: center;
+    flex: auto;
     /* Add space between each review item */
 }
 
 .review-box {
     border-bottom: 1px solid #aaa;
+    flex-direction: row;
     /* Add a border to the review box */
     padding: 15px;
     /* Add padding to the review box */

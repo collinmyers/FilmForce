@@ -30,7 +30,7 @@ export default function Settings() {
 
     if (isLoading) {
         return;
-    }
+    };
 
     const handleChangePassword = async () => {
         const user = auth.currentUser;
@@ -57,8 +57,7 @@ export default function Settings() {
         } else {
             return;
         }
-    }
-
+    };
 
     const handleDelete = async () => {
         const user = auth.currentUser;
@@ -84,7 +83,7 @@ export default function Settings() {
             setNewPassword('');
             setConfirmNewPassword('');
         }
-    }
+    };
 
     const handleLogout = () => {
         signOut(auth)
@@ -97,6 +96,10 @@ export default function Settings() {
                 console.error('Logout Error:', error);
             });
     };
+
+    const handleEditReviews = () => {
+        navigate(`/${auth.currentUser.uid}/UserReviews`)
+    }
 
     return (
         <div>
@@ -125,6 +128,8 @@ export default function Settings() {
 
                 <p className='profile-info'>{auth.currentUser.displayName}</p>
                 <p className='profile-info'>{auth.currentUser.email}</p>
+
+                <button onClick={handleEditReviews}>Edit Reviews</button>
 
                 <h2 id="change-pass-title">Change Password</h2>
                 <div>

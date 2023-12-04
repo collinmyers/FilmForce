@@ -14,7 +14,6 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [posters, setPosters] = useState([]);
     const [newestReviews, setNewestReviews] = useState([]);
-    const [reviewTitles, setReviewTitles] = useState([]);
     const [ids, setIds] = useState([]);
 
     const navigate = useNavigate();
@@ -198,20 +197,6 @@ const Home = () => {
                 ...doc.data(),
             }));
 
-            const url = "https://api.themoviedb.org/3";
-            const api_key = "?api_key=ab1e98b02987e9593b705864efaf4798";
-
-            const list = [];
-
-            reviews.forEach(async (doc) => {
-                // Fetch basic movie details
-                const response = await fetch(`${url}/movie/${doc.movieID}${api_key}`);
-                const movieDetails = await response.json();
-
-                list.push(movieDetails.title);
-            });
-
-            setReviewTitles(list);
             return reviews;
         } catch (error) {
             console.error('Error fetching newest reviews:', error);

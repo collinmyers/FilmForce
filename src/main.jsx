@@ -9,6 +9,7 @@ import MovieProfilePage from './pages/Main/Movie';
 import Settings from './pages/Main/Settings';
 import PrivateRoutes from './utils/PrivateRoute';
 import SearchPage from './pages/Main/Search';
+import UserReviews from './pages/Main/UserReviews';
 
 export default function App() {
     return (
@@ -25,6 +26,7 @@ export default function App() {
 
                     <Route element={<PrivateRoutes />}>
                         <Route path='/Settings' element={<Settings />} />
+                        <Route path=':id/UserReviews' element={<UserReviews />} />
                     </Route>
 
                     <Route path="*" element={<p>There is nothing here: 404!</p>} />

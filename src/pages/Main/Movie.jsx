@@ -212,12 +212,12 @@ const MovieProfilePage = () => {
             </div>
 
             <div className='reviews-container'>
-                <label>{title} Reviews:</label>
+                <h2>{title} Reviews:</h2>
                 <ul className="reviews-list">
                     {reviews.map((review, index) => (
                         <li key={index} className="review-item">
                             <div className="review-box">
-                                <p>{review.FilmForceRating}-5</p>
+                                <p>{review.FilmForceRating}/5</p>
                                 <p>{review.userReview}</p>
                             </div>
                         </li>
