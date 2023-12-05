@@ -4,6 +4,7 @@ import { getDocs, query, collection, where } from 'firebase/firestore';
 import { auth, db } from '../../../services/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { getTopMovies } from '../../../services/TMDB';
+import FilmForcePoster from "../../assets/FilmForce-alt.png";
 import '../../styles/hub.css'
 
 import axios from "axios-https-proxy-fix";
@@ -170,7 +171,7 @@ const Home = () => {
         });
 
         return () => unsubscribe();
-    }, []);
+    });
 
     const handleLogout = () => {
         signOut(auth)
@@ -257,12 +258,13 @@ const Home = () => {
                     {newestReviews.length !== 0 && (
                         <ul className="review-list">
                             {newestReviews.map((review) => (
-                                <li>
+                                <li key={review.id}>
                                     <a>{`${review.movieName} ${review.FilmForceRating}/5 - ${review.userReview}`}</a>
                                 </li>
                             ))}
                         </ul>
                     )}
+
                 </section>
             </main>
         </div>
