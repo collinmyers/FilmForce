@@ -149,7 +149,6 @@ button:hover {
 #settings-title {
     color: #FFFFFF;
     margin-top: 2rem;
-    margin-bottom: 2rem;
 }
 
 #acct-settings-title {
@@ -423,7 +422,7 @@ button:hover {
 .editable-score {
     margin: .5rem 0;
     align-self: center;
-    width: 40px; 
+    width: 40px;
     text-align: center;
 }
 
@@ -449,5 +448,9 @@ button:hover {
 .reviewMovieTitle {
     text-align: center;
     margin: 1rem;
-  }
-  
+}
+
+.edit-reviews-goto{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}

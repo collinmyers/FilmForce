@@ -123,7 +123,7 @@ export default function Settings() {
 
             <h1 className="account-settings" id="settings-title">Settings</h1>
 
-            <button onClick={handleEditReviews}>Edit Reviews</button>
+            <button className='edit-reviews-goto' onClick={handleEditReviews}>Edit Reviews</button>
 
             <section className="account-settings" id="change-pass">
                 <h2 id="acct-settings-title">Account Settings</h2>
