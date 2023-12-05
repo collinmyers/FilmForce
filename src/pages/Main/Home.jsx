@@ -171,7 +171,7 @@ const Home = () => {
         });
 
         return () => unsubscribe();
-    });
+    }, []);
 
     const handleLogout = () => {
         signOut(auth)

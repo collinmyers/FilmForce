@@ -56,6 +56,8 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
 
                 rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20);
 
+                console.log(rottenTomatoesScore)
+
                 if (!checkForNumber(rottenTomatoesScore)) rottenTomatoesScore = undefined;
 
             }
