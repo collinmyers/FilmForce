@@ -111,7 +111,7 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                 if (rottenTomatoesScore === undefined) {
                     rottenTomatoesScore = ratingsSection.substring(ratingsSection.lastIndexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('%</span') + 1);
 
-                    if (rottenTomatoesScore === undefined || rottenTomatoesScore.length > 3) {
+                    if (rottenTomatoesScore === undefined || rottenTomatoesScore.length > 3 || rottenTomatoesScore.length < 1) {
                         console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
                         rottenTomatoesScore = "N/A";
                     } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mRotten Tomatoes Score Retrieved from Google ...\x1b[0m`)
