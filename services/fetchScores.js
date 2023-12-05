@@ -56,8 +56,6 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
 
                 rottenTomatoesScore = rtHTML.substring(rtHTML.indexOf('tomatometerscore="') + 18, rtHTML.indexOf('tomatometerscore="') + 20);
 
-                console.log(rottenTomatoesScore)
-
                 if (!checkForNumber(rottenTomatoesScore)) rottenTomatoesScore = undefined;
 
             }
@@ -102,7 +100,7 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
                 if (imdbScore === undefined) {
                     imdbScore = ratingsSection.substring(ratingsSection.indexOf('class="gsrt KMdzJ"') + 38, ratingsSection.indexOf('/10') + 3);
 
-                    if (imdbScore === undefined || imdbScore.length > 6) {
+                    if (imdbScore === undefined || imdbScore.length > 6 || imdbScore.length < 1) {
                         console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[31mUnable to Get Score ...\x1b[0m`)
                         imdbScore = "N/A";
                     } else console.log(`${date.format(new Date(), 'MM/DD/YYYY HH:mm:ss')} \x1b[32mIMDB Score Retrieved from Google...\x1b[0m`)
@@ -125,6 +123,9 @@ export default async function fetchScores(movieID, movieName, releaseDate) {
     if (!rottenTomatoesScore.includes('%') && rottenTomatoesScore !== "N/A") {
         rottenTomatoesScore = rottenTomatoesScore + '%';
     }
+
+    console.log(imdbScore)
+
     if (!imdbScore.includes('/10') && imdbScore !== "N/A") {
         imdbScore = imdbScore + '/10';
     }
