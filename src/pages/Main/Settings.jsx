@@ -30,7 +30,7 @@ export default function Settings() {
 
     if (isLoading) {
         return;
-    };
+    }
 
     const handleChangePassword = async () => {
         const user = auth.currentUser;
@@ -123,13 +123,15 @@ export default function Settings() {
 
             <h1 className="account-settings" id="settings-title">Settings</h1>
 
+            <button onClick={handleEditReviews}>Edit Reviews</button>
+
             <section className="account-settings" id="change-pass">
                 <h2 id="acct-settings-title">Account Settings</h2>
 
                 <p className='profile-info'>{auth.currentUser.displayName}</p>
                 <p className='profile-info'>{auth.currentUser.email}</p>
 
-                <button onClick={handleEditReviews}>Edit Reviews</button>
+                
 
                 <h2 id="change-pass-title">Change Password</h2>
                 <div>

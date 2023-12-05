@@ -122,42 +122,56 @@ export default function UserReviews() {
                     {reviews.map((review, index) => (
                         <li key={index} className="review-item">
                             <div className="review-box">
-                                <h2 style={{ textAlign: 'left', margin: 10 }}>
-                                    {review.movieName} - {review.FilmForceRating}/5
+                                <h2 className='reviewMovieTitle'>
+                                    {review.movieName}
                                 </h2>
 
-                                <label htmlFor={`rating-${review.id}`}>Update Rating: </label>
-                                <input
-                                    type="number"
-                                    id={`rating-${review.id}`}
-                                    min="1"
-                                    max="5"
-                                    defaultValue={review.FilmForceRating}
-                                    style={{ width: 40, marginRight: 20 }}
-                                />
-
                                 <textarea
+                                    className='editable-review'
                                     id={review.id}
                                     rows="10"
                                     cols="50"
                                     defaultValue={review.userReview}
                                 />
 
-                                <button
-                                    onClick={() =>
-                                        handleUpdate(
-                                            review.id,
-                                            parseInt(document.getElementById(`rating-${review.id}`).value, 10),
-                                            document.getElementById(review.id).value
-                                        )
-                                    }
-                                >
-                                    <p>Update</p>
-                                </button>
 
-                                <button onClick={() => handleDeleteReview(review.id)}>
-                                    <p>Delete</p>
-                                </button>
+                                <div className='scoreContainer'>
+
+                                    <p className='scoreText'>Score</p>
+
+                                    <input
+                                        type="number"
+                                        className='editable-score'
+                                        id={`rating-${review.id}`}
+                                        min="1"
+                                        max="5"
+                                        defaultValue={review.FilmForceRating}
+                                    />
+                                </div>
+
+
+                                <div className='updatButtonsContainer'>
+                                    <button
+                                        className='edit-review-button'
+                                        onClick={() =>
+                                            handleUpdate(
+                                                review.id,
+                                                parseInt(document.getElementById(`rating-${review.id}`).value, 10),
+                                                document.getElementById(review.id).value
+                                            )
+                                        }
+                                    >
+                                        <p>Update</p>
+                                    </button>
+
+                                    <button
+                                        className='edit-review-button'
+                                        onClick={() => handleDeleteReview(review.id)}>
+                                        <p>Delete</p>
+                                    </button>
+                                </div>
+
+
                             </div>
                         </li>
                     ))}

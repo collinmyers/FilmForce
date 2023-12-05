@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../../../services/firebaseConfig';
-import { collection, query, where, getDocs, addDoc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
 const MovieProfilePage = () => {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -195,7 +195,7 @@ const MovieProfilePage = () => {
                                 </React.Fragment>
                             ))}
                         </div>
-                        <label htmlFor="review-text">What did you think about the movie:</label>
+                        <label htmlFor="review-text">What did you think about the movie?</label>
                         <br />
                         <textarea
                             id="review-text"
@@ -212,13 +212,12 @@ const MovieProfilePage = () => {
             </div>
 
             <div className='reviews-container'>
-                <h2>{title} Reviews:</h2>
+                <h2 className='reviewsTitle'>{title} Reviews</h2>
                 <ul className="reviews-list">
                     {reviews.map((review, index) => (
                         <li key={index} className="review-item">
                             <div className="review-box">
-                                <p>{review.FilmForceRating}/5</p>
-                                <p>{review.userReview}</p>
+                                <p className='user-review'>{review.FilmForceRating}/5 - {review.userReview}</p>
                             </div>
                         </li>
                     ))}

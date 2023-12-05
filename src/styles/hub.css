@@ -226,13 +226,16 @@ button:hover {
 .right {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    /* Adjust this as needed */
     max-width: 400px;
+    margin: 0 auto;
+    /* Center the content horizontally */
 }
 
 #details,
 #leave-review {
-    margin-top: 5rem;
+    margin-top: 2rem;
 }
 
 #overview,
@@ -369,7 +372,7 @@ button:hover {
 }
 
 #review-text {
-    margin-bottom: 5rem;
+    margin-bottom: 1rem
 }
 
 #overview,
@@ -383,31 +386,68 @@ button:hover {
     margin: 50px;
     justify-content: center;
     flex-direction: column;
-    /* Add space around the reviews container */
+
 }
 
 .reviews-list {
     width: 75%;
-    border: 3px solid #ccc;
+    border: 3px solid #E50914;
     border-radius: 10px;
-    background-color: #151515;
     list-style-type: none;
-    /* Remove default list styles */
     padding: 0;
-    /* Remove default padding */
     align-self: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    margin: 0 auto;
     margin: 20px;
 }
 
 .review-item {
     flex: auto;
-    /* Add space between each review item */
 }
 
 .review-box {
-    border-bottom: 1px solid #aaa;
     flex-direction: row;
-    /* Add a border to the review box */
     padding: 15px;
-    /* Add padding to the review box */
 }
+
+.review-box {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    align-self: center;
+    margin: 0 auto;
+}
+
+.editable-score {
+    margin: .5rem 0;
+    align-self: center;
+    width: 40px; 
+    text-align: center;
+}
+
+.edit-review-button {
+    align-self: center;
+    margin-right: .25rem;
+}
+
+.scoreContainer {
+    display: flex;
+    align-self: center;
+    align-items: center;
+}
+
+.scoreText {
+    margin-right: .5rem;
+}
+
+.updatButtonsContainer {
+    align-self: center;
+}
+
+.reviewMovieTitle {
+    text-align: center;
+    margin: 1rem;
+  }
+  
