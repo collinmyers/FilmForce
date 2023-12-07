@@ -83,7 +83,8 @@ const Search = () => {
                 numberOfRatings++;
             });
 
-            const averageRating = totalRating / numberOfRatings;
+            let averageRating = totalRating / numberOfRatings;
+            averageRating = averageRating.toFixed(2);
 
             return averageRating + "/5";
         } catch (error) {
