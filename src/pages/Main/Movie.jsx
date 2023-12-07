@@ -1,26 +1,30 @@
+// Import React and necessary dependencies
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../../../services/firebaseConfig';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
+// Define the MovieProfilePage component
 const MovieProfilePage = () => {
+    // State variables to manage the component's state
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [rating, setRating] = useState(null);
     const [reviewText, setReviewText] = useState('');
     const [reviews, setReviews] = useState([]);
 
+    // Initialize the navigate function and location hook from react-router-dom
     const navigate = useNavigate();
-
     const { state } = useLocation();
 
-    // Now, state contains the details passed from the previous component
+    // Extract movie details from the state
     const {
         id, title, genres, releaseDate, overview, poster, top3Cast,
         top3Directors, runtime, FFrating, imdbRating, rottenTomatoesRating
     } = state;
 
+    // Function to fetch reviews for the current movie
     const fetchReviews = async () => {
         try {
             const reviewsQuery = query(
@@ -39,13 +43,17 @@ const MovieProfilePage = () => {
         }
     };
 
+    // useEffect to fetch data and handle authentication state changes
     useEffect(() => {
+        // Fetch reviews and set up authentication state change listener
         fetchReviews();
 
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
+                // User is logged in
                 setLoggedIn(true);
             } else {
+                // User is not logged in
                 setLoggedIn(false);
             }
             setIsLoading(false);
@@ -53,21 +61,27 @@ const MovieProfilePage = () => {
             console.error('Auth state change error:', error);
             setIsLoading(false);
         });
-        return () => unsubscribe();
-    },);
 
+        // Cleanup function to unsubscribe from the authentication state change listener
+        return () => unsubscribe();
+    }, []);
+
+    // If still loading, return null
     if (isLoading) {
         return null;
     }
 
+    // Function to handle user logout
     const handleLogout = () => {
         signOut(auth)
             .then(() => {
+                // Successfully logged out
                 setLoggedIn(false);
                 auth.currentUser.reload();
                 navigate('/');
             })
             .catch((error) => {
+                // Logout error
                 console.error('Logout Error:', error);
             });
     };
@@ -78,6 +92,7 @@ const MovieProfilePage = () => {
             const user = auth.currentUser;
 
             if (!rating || !reviewText) {
+                // Alert if rating or review text is missing
                 alert('Please provide both a rating and a review text.');
                 return;
             }
@@ -93,6 +108,7 @@ const MovieProfilePage = () => {
                 const existingReviews = await getDocs(reviewsQuery);
 
                 if (!existingReviews.empty) {
+                    // Alert if user already submitted a review for this movie
                     alert('You have already submitted a review for this movie.');
                     return;
                 }
@@ -114,31 +130,39 @@ const MovieProfilePage = () => {
                 console.error('Error submitting review:', error);
                 alert('An error occurred while submitting the review. Please try again.');
             }
-        }
-        else {
+        } else {
+            // Alert if user is not logged in
             alert('Please log in to leave a review!');
         }
     };
 
+    // Function to handle the change in rating
     const handleRatingChange = (event) => {
         setRating(parseInt(event.target.value, 10));
     };
 
+    // Function to handle the change in review text
     const handleReviewTextChange = (event) => {
         setReviewText(event.target.value);
     };
 
+    // JSX for rendering the MovieProfilePage component
     return (
         <div>
+            {/* Header section */}
             <header className="site-header">
                 <h1>Welcome to Film<span id="home-force">Force</span></h1>
                 <p>For the Love of Cinema</p>
             </header>
+
+            {/* Navigation bar */}
             <nav className="main-nav">
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/Search">Search</a></li>
+                    {/* Show Settings link if user is logged in */}
                     {loggedIn && <li><a href="/Settings">Settings</a></li>}
+                    {/* Show Logout link if user is logged in, otherwise show Login link */}
                     {loggedIn ? (
                         <li> <a onClick={handleLogout} id='logout'>Logout</a></li>
                     ) : (
@@ -147,12 +171,12 @@ const MovieProfilePage = () => {
                 </ul>
             </nav>
 
+            {/* Movie details section */}
             <h1 className="movie-title">{title}</h1>
             <div className="movie-page">
                 <section className="left">
-
+                    {/* Movie poster and ratings */}
                     <img id="movie-poster" src={poster} alt="Movie Poster" />
-
                     <h2 className="movie-header">Movie Ratings</h2>
                     <h3 id="FF-rating">FilmForce Rating</h3>
                     <h4><span id="home-force">{FFrating}</span></h4>
@@ -163,11 +187,13 @@ const MovieProfilePage = () => {
                 </section>
 
                 <section className="right">
+                    {/* Movie overview */}
                     <div id="overview">
                         <h2 className="movie-header">Movie Overview</h2>
                         <p>{overview}</p>
                     </div>
 
+                    {/* Movie details */}
                     <div id="details">
                         <h2 className="movie-header">Movie Details</h2>
                         <ul id="movie-details">
@@ -178,8 +204,11 @@ const MovieProfilePage = () => {
                             <li><strong>Runtime: </strong>{runtime}</li>
                         </ul>
                     </div>
+
+                    {/* Leave a review section */}
                     <div id="leave-review">
                         <h2 className="movie-header">Leave a Review and Rating</h2>
+                        {/* Rating input */}
                         <div className="rating">
                             {[1, 2, 3, 4, 5].map((value) => (
                                 <React.Fragment key={value}>
@@ -195,6 +224,7 @@ const MovieProfilePage = () => {
                                 </React.Fragment>
                             ))}
                         </div>
+                        {/* Review text input */}
                         <label htmlFor="review-text">What did you think about the movie?</label>
                         <br />
                         <textarea
@@ -204,16 +234,17 @@ const MovieProfilePage = () => {
                             value={reviewText}
                             onChange={handleReviewTextChange}
                         />
+                        {/* Submit review button */}
                         <button className="movieReviewSubmit" onClick={handleReviewSubmit}>Submit Review</button>
                     </div>
                 </section>
-
-
             </div>
 
+            {/* Display reviews section */}
             <div className='reviews-container'>
                 <h2 className='reviewsTitle'>{title} Reviews</h2>
                 <ul className="reviews-list">
+                    {/* Map over reviews and display each review */}
                     {reviews.map((review, index) => (
                         <li key={index} className="review-item">
                             <div className="review-box">
@@ -223,10 +254,9 @@ const MovieProfilePage = () => {
                     ))}
                 </ul>
             </div>
-
         </div>
     );
 };
 
-
+// Export the MovieProfilePage component as the default export
 export default MovieProfilePage;

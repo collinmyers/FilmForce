@@ -4,16 +4,19 @@ import cors from "cors";
 
 const app = express();
 app.use(cors({
-    origin: '*', // Replace with your client's domain
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
 
-const port = 3001; // Choose a port
+// Use this port for access to endpoint
+const port = 3001;
 
+// Custom endpoint to get external scores
 app.get("/api/scores", async (req, res) => {
     const { movieID, movieName, releaseDate } = req.query;
 
+    // Attempt to get scores and return through response
     try {
         const ratings = await fetchScores(movieID, movieName, releaseDate);
         console.log(`${movieName} - IMDB: ${ratings[0]} | RT: ${ratings[1]}`)
@@ -30,6 +33,8 @@ app.get("/api/scores", async (req, res) => {
     }
 });
 
+
+// Start listening on specified port
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

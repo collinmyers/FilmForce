@@ -1,3 +1,4 @@
+// Import React and necessary dependencies
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +8,9 @@ import axios from "axios-https-proxy-fix";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../../services/firebaseConfig';
 
+// Define the Search component
 const Search = () => {
+    // State variables to manage the component's state
     const [loggedIn, setLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -15,11 +18,14 @@ const Search = () => {
     const [trendingMovies, setTrendingMovies] = useState({ titles: [], posters: [] });
     const navigate = useNavigate();
 
+    // useEffect to handle authentication state changes and fetch trending movies
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
+                // User is logged in
                 setLoggedIn(true);
             } else {
+                // User is not logged in
                 setLoggedIn(false);
             }
             setIsLoading(false);
@@ -28,27 +34,33 @@ const Search = () => {
             setIsLoading(false);
         });
 
+        // Fetch trending movies
         const fetchTrendingMovies = async () => {
             const [titles, posters, id] = await getTopMovies();
             setTrendingMovies({ titles, posters, id });
         };
         fetchTrendingMovies();
 
+        // Cleanup function to unsubscribe from the authentication state change listener
         return () => unsubscribe();
     }, []);
 
+    // Function to handle user logout
     const handleLogout = () => {
         signOut(auth)
             .then(() => {
+                // Successfully logged out
                 setLoggedIn(false);
                 auth.currentUser.reload();
                 navigate("/");
             })
             .catch((error) => {
+                // Logout error
                 console.error('Logout Error:', error);
             });
     };
 
+    // Function to calculate the average rating for a movie
     const calculateAverageRating = async (movieID) => {
         try {
             const ratingsQuery = query(
@@ -80,6 +92,7 @@ const Search = () => {
         }
     };
 
+    // Function to fetch scores from an external API
     const getScores = async (imdbID, name, date) => {
         try {
             const response = await axios.get(`http://localhost:3001/api/scores`, {
@@ -96,9 +109,10 @@ const Search = () => {
         }
     }
 
+    // Function to fetch details for a movie and navigate to its profile page
     const fetchMovieDetails = async (movieId) => {
         try {
-
+            // Base URL for TMDB API
             const url = "https://api.themoviedb.org/3";
             const api_key = "?api_key=ab1e98b02987e9593b705864efaf4798";
 
@@ -109,8 +123,6 @@ const Search = () => {
             const res = await fetch(`${url}/movie/${movieId}/external_ids${api_key}`);
             const externalIDs = await res.json();
             const imdbID = externalIDs.imdb_id;
-
-            // console.log("imdb id" + imdbID);
 
             // Fetch credits for top cast and directors
             const creditsResponse = await fetch(`${url}/movie/${movieId}/credits${api_key}`);
@@ -130,14 +142,17 @@ const Search = () => {
             const runtimeHours = Math.floor(movieDetails.runtime / 60);
             const runtimeMinutes = movieDetails.runtime % 60;
 
+            // Format release date
             const enDate = new Date(movieDetails.release_date).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
             });
 
+            // Fetch scores from external API
             const ratings = await getScores(imdbID, movieDetails.title, enDate)
 
+            // Calculate our rating from Firestore data
             const ourRating = await calculateAverageRating(movieDetails.id);
 
             // Map the required fields
@@ -167,54 +182,69 @@ const Search = () => {
         }
     };
 
+    // Function to handle the search for movies
     const handleSearch = async () => {
         if (searchQuery.trim() === '') {
+            // Alert if the search query is empty
             alert('Please enter a search term');
             return;
         }
 
+        // Base URL for TMDB API
         const url = "https://api.themoviedb.org/3";
         const api_key = "?api_key=ab1e98b02987e9593b705864efaf4798";
 
         try {
+            // Fetch movies based on the search query
             const response = await fetch(`${url}/search/movie${api_key}&query=${searchQuery}`);
             if (!response.ok) {
+                // Handle error if the TMDB API request fails
                 throw new Error(`TMDB API request failed with status ${response.status}`);
             }
 
+            // Parse the response data
             const responseData = await response.json();
 
+            // Extract relevant information from the results
             const resultsLength = responseData.results.length;
-
             const resultsArray = responseData.results.slice(0, resultsLength);
 
+            // Update search results state
             setSearchResults(resultsArray);
         } catch (error) {
+            // Log and alert for any errors during data fetching
             console.error("Error fetching data:", error);
             alert('An error occurred while fetching data');
         }
     };
 
+    // Function to handle key press events (e.g., pressing Enter to trigger search)
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') handleSearch();
     };
 
+    // Return null while the component is still loading
     if (isLoading) {
         return null;
     }
 
+    // Render the Search component
     return (
         <div>
+            {/* Header section */}
             <header className="site-header sh-home">
                 <h1>Welcome to Film<span id="home-force">Force</span></h1>
                 <p>For the Love of Cinema</p>
             </header>
 
+            {/* Navigation bar */}
             <nav className="main-nav">
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/Search">Search</a></li>
+                    {/* Show Settings link if user is logged in */}
                     {loggedIn && <li><a href="/Settings">Settings</a></li>}
+                    {/* Show Logout link if user is logged in, otherwise show Login link */}
                     {loggedIn ? (
                         <li> <a onClick={handleLogout} id='logout'>Logout</a></li>
                     ) : (
@@ -223,7 +253,9 @@ const Search = () => {
                 </ul>
             </nav>
 
+            {/* Main content section for search */}
             <main className="content content-search" id="search-section">
+                {/* Search bar section */}
                 <div className="search-bar">
                     <input
                         type="text"
@@ -235,11 +267,14 @@ const Search = () => {
                     <button onClick={handleSearch}>Search</button>
                 </div>
 
+                {/* Display search results */}
                 <div className="search-results">
                     {searchResults.length > 0 ? (
+                        // Display search results if available
                         searchResults.map((movie) => (
                             <div key={movie.id} className="movie-result">
                                 {movie.poster_path ? (
+                                    // Display movie poster if available
                                     <img
                                         src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
                                         alt={movie.title}
@@ -247,6 +282,7 @@ const Search = () => {
                                         style={{ cursor: 'pointer' }}
                                     />
                                 ) : (
+                                    // Display placeholder if no poster is available
                                     <>
                                         <br />
                                         <br />
@@ -262,6 +298,7 @@ const Search = () => {
                             </div>
                         ))
                     ) : (
+                        // Display trending movies if no search results
                         trendingMovies.titles.map((title, index) => (
                             <div key={index} className="movie-result">
                                 <img
@@ -274,14 +311,10 @@ const Search = () => {
                         ))
                     )}
                 </div>
-
-                {/* Pass selectedMovie to the Movie component */}
-                {/* {selectedMovie !== null && (
-                    <Movie {...selectedMovie} />
-                )} */}
             </main>
         </div>
     );
 };
 
+// Export the Search component as the default export
 export default Search;
